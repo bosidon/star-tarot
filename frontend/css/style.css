@@ -1606,18 +1606,26 @@ footer a {
   height: 220px;
   border-radius: 10px;
   overflow: hidden;
-  opacity: 0.07;
+  opacity: 0.2;
 }
 .hero-card img {
   width: 100%; height: 100%;
   object-fit: cover;
 }
-.hero-card.hc1 { top: 8%; right: 5%; transform: rotate(12deg); animation: floatCard 7s ease-in-out infinite; }
-.hero-card.hc2 { bottom: 8%; left: 5%; transform: rotate(-15deg); animation: floatCard 8s ease-in-out infinite; animation-delay: -2s; }
-.hero-card.hc3 { top: 35%; right: 25%; transform: rotate(5deg); animation: floatCard 9s ease-in-out infinite; animation-delay: -4s; }
-@keyframes floatCard {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-18px); }
+.hero-card.hc1 { top: 15%; left: calc(50% - 110px); transform: rotate(-14deg); animation: floatHC1 7s ease-in-out infinite; }
+.hero-card.hc2 { top: 12%; left: 50%; transform: translateX(-50%); animation: floatHC2 8s ease-in-out infinite; animation-delay: -2s; }
+.hero-card.hc3 { top: 15%; left: calc(50% + 40px); transform: rotate(14deg); animation: floatHC3 9s ease-in-out infinite; animation-delay: -4s; }
+@keyframes floatHC1 {
+  0%, 100% { transform: rotate(-14deg) translateY(0); }
+  50% { transform: rotate(-14deg) translateY(-14px); }
+}
+@keyframes floatHC2 {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-14px); }
+}
+@keyframes floatHC3 {
+  0%, 100% { transform: rotate(14deg) translateY(0); }
+  50% { transform: rotate(14deg) translateY(-14px); }
 }
 
 /* Hero底部渐变过渡 */
