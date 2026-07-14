@@ -112,7 +112,7 @@ body {
 }
 /* ============ 布局 ============ */
 .container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 20px;
   position: relative;
@@ -1546,12 +1546,10 @@ footer a {
 }
 /* ============ Hero 区 ============ */
 .hero {
-  min-height: 80vh;
+  min-height: 60vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
   position: relative;
   overflow: hidden;
   padding: 80px 20px 60px;
@@ -1562,6 +1560,13 @@ footer a {
   background: radial-gradient(ellipse 600px 400px at 50% 40%, rgba(124,58,237,0.06) 0%, transparent 70%),
               radial-gradient(ellipse 500px 300px at 50% 60%, rgba(201,168,76,0.04) 0%, transparent 70%);
   pointer-events: none;
+}
+.hero-inner {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
 }
 .hero-content { position: relative; z-index: 2; }
 .hero-icon {
@@ -1600,8 +1605,8 @@ footer a {
 }
 .hero-card {
   position: absolute;
-  width: 140px;
-  height: 210px;
+  width: 130px;
+  height: 200px;
   border-radius: 10px;
   overflow: hidden;
   opacity: 0.08;
@@ -1610,9 +1615,9 @@ footer a {
   width: 100%; height: 100%;
   object-fit: cover;
 }
-.hero-card.hc1 { top: 8%; right: 8%; transform: rotate(12deg); animation: floatCard 7s ease-in-out infinite; }
-.hero-card.hc2 { bottom: 12%; left: 6%; transform: rotate(-15deg); animation: floatCard 8s ease-in-out infinite; animation-delay: -2s; }
-.hero-card.hc3 { top: 50%; left: 3%; transform: rotate(5deg); animation: floatCard 9s ease-in-out infinite; animation-delay: -4s; }
+.hero-card.hc1 { top: 5%; right: 0; transform: rotate(12deg); animation: floatCard 7s ease-in-out infinite; }
+.hero-card.hc2 { bottom: 0; right: 5%; left: auto; transform: rotate(-15deg); animation: floatCard 8s ease-in-out infinite; animation-delay: -2s; }
+.hero-card.hc3 { top: 30%; left: 0; transform: rotate(5deg); animation: floatCard 9s ease-in-out infinite; animation-delay: -4s; }
 @keyframes floatCard {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-18px); }
@@ -1624,7 +1629,7 @@ footer a {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   padding: 0 20px 60px;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 .feature-card {
@@ -1664,7 +1669,7 @@ footer a {
 /* ============ 牌阵展示 ============ */
 .spreads-showcase {
   padding: 0 20px 60px;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 .spreads-title {
@@ -1762,7 +1767,7 @@ footer a {
 /* ============ 评价区 ============ */
 .testimonials {
   padding: 0 20px 60px;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   text-align: center;
 }
@@ -1797,17 +1802,17 @@ footer a {
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .hero { min-height: 60vh; padding: 60px 16px 40px; }
+  .hero { min-height: 55vh; padding: 60px 16px 40px; }
   .hero-title { font-size: 2rem; letter-spacing: 3px; }
   .hero-sub { font-size: 0.9rem; }
   .hero-icon { font-size: 2.2rem; }
-  .hero-card { width: 100px; height: 150px; }
+  .hero-card { width: 90px; height: 140px; }
   .features { grid-template-columns: 1fr; gap: 16px; padding: 0 16px 40px; }
   .spreads-scroll { gap: 14px; }
   .spread-card { flex: 0 0 160px; }
 }
 @media (max-width: 480px) {
-  .hero { min-height: 50vh; padding: 50px 16px 30px; }
+  .hero { min-height: 45vh; padding: 50px 16px 30px; }
   .hero-title { font-size: 1.6rem; letter-spacing: 2px; }
   .hero-sub { font-size: 0.88rem; }
   .hero-card { display: none; }
