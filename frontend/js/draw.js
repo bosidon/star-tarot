@@ -25,12 +25,12 @@ var DrawPage = {
     var self = this;
     var container = document.getElementById('fan-row-1');
     var arcs = [
-      { radius: 2000, count: 28, startIdx: 0 },
-      { radius: 1800, count: 26, startIdx: 28 },
-      { radius: 1600, count: 24, startIdx: 54 }
+      { radius: 1500, count: 28, startIdx: 0 },
+      { radius: 1300, count: 26, startIdx: 28 },
+      { radius: 1100, count: 24, startIdx: 54 }
     ];
     
-    var cx = 960, cy = 2100;
+    var cx = 960, cy = 1600;
     var cardW = 80, cardH = 150;
     
     var cardIdx = 0;
