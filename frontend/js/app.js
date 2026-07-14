@@ -1023,3 +1023,83 @@ s.textContent = `
   }
 `;
 document.head.appendChild(s);
+/* ============ Canvas 星空背景 ============ */
+(function initStars() {
+  const canvas = document.getElementById('stars-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let w, h;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 生成星星
+  for (let i = 0; i < 120; i++) {
+    stars.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 2 + 0.5,
+      alpha: Math.random(),
+      speed: Math.random() * 0.3 + 0.1,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    stars.forEach(s => {
+      s.alpha += (Math.sin(Date.now() * 0.001 + s.phase) + 1) * 0.005;
+      s.alpha = Math.max(0.1, Math.min(1, s.alpha));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, ' + s.alpha.toFixed(2) + ')';
+      ctx.fill();
+      // 大星星加光晕
+      if (s.r > 1.5) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(201, 168, 76, ' + (s.alpha * 0.15).toFixed(2) + ')';
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============ 导航栏滚动效果 ============ */
+(function initNavbar() {
+  const navbar = document.getElementById('navbar');
+  if (!navbar) return;
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+})();
+
+/* ============ 热门牌阵点击 - 滚动到占卜区并切换牌阵 ============ */
+(function initSpreadCards() {
+  document.querySelectorAll('.spread-card').forEach((card, i) => {
+    card.addEventListener('click', () => {
+      document.getElementById('read').scrollIntoView({ behavior: 'smooth' });
+      const spreads = ['single', 'three', 'celtic', 'relationship'];
+      const spread = spreads[i] || 'single';
+      const options = document.querySelectorAll('.spread-option');
+      options.forEach(o => o.classList.remove('active'));
+      const target = document.querySelector('.spread-option[data-spread="' + spread + '"]');
+      if (target) {
+        target.classList.add('active');
+        TarotApp.currentSpread = spread;
+        TarotApp.updateSpreadDescription();
+      }
+    });
+  });
+})();

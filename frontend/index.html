@@ -18,10 +18,92 @@
 <body>
 
 <div class="stars"></div>
+<canvas id="stars-canvas"></canvas>
 
 <div id="xianbao-topbar" data-active="tarot"></div>
 
-<div class="container">
+<!-- ====== 导航栏 ====== -->
+<nav class="navbar" id="navbar">
+    <div class="nav-logo">✦ 星语塔罗</div>
+    <div class="nav-links">
+        <a href="#hero">首页</a>
+        <a href="#read">开始占卜</a>
+        <a href="#spreads">牌阵</a>
+    </div>
+</nav>
+
+<!-- ====== Hero ====== -->
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">探索命运的奥秘</h1>
+        <p class="hero-sub">塔罗牌指引 · 每日占卜 · AI 深度解读</p>
+        <a href="#read" class="btn-gold">✦ 开始你的占卜</a>
+        <span class="hero-stats">已有 12,847 人今日占卜</span>
+    </div>
+    <div class="hero-floating-card fc1"><img src="/assets/cards/RWS_Tarot_17_Star.jpg" alt=""></div>
+    <div class="hero-floating-card fc2"><img src="/assets/cards/RWS_Tarot_18_Moon.jpg" alt=""></div>
+</section>
+
+<!-- ====== 三大功能入口 ====== -->
+<section class="features">
+    <a href="#read" class="feature-card">
+        <div class="fc-icon">🃏</div>
+        <h3>每日一抽</h3>
+        <p>随机抽取一张塔罗牌，获取今日指引与智慧</p>
+    </a>
+    <a href="#read" class="feature-card">
+        <div class="fc-icon">🔮</div>
+        <h3>牌阵选择</h3>
+        <p>5种经典牌阵，从单张到凯尔特十字，适配不同问题</p>
+    </a>
+    <a href="#read" class="feature-card">
+        <div class="fc-icon">✨</div>
+        <h3>AI 解读</h3>
+        <p>DeepSeek AI 深度解读每一张牌，提供个性化指引</p>
+    </a>
+</section>
+
+<!-- ====== 热门牌阵 ====== -->
+<section class="spreads-showcase" id="spreads">
+    <div class="spreads-title">
+        <h2>🃏 热门牌阵</h2>
+    </div>
+    <div class="spreads-scroll">
+        <div class="spread-card">
+            <div class="sc-icon">🃏</div>
+            <h4>单张指引</h4>
+            <p>一张牌直击核心问题</p>
+            <span class="sc-count">12,847次</span>
+        </div>
+        <div class="spread-card">
+            <div class="sc-icon">🃏🃏🃏</div>
+            <h4>三张牌阵</h4>
+            <p>过去·现在·未来</p>
+            <span class="sc-count">8,932次</span>
+        </div>
+        <div class="spread-card">
+            <div class="sc-icon">✝️</div>
+            <h4>凯尔特十字</h4>
+            <p>全方位深度剖析</p>
+            <span class="sc-count">5,621次</span>
+        </div>
+        <div class="spread-card">
+            <div class="sc-icon">💕</div>
+            <h4>关系牌阵</h4>
+            <p>理解彼此的需求</p>
+            <span class="sc-count">7,104次</span>
+        </div>
+    </div>
+</section>
+
+<!-- ====== 用户评价 ====== -->
+<section class="testimonials">
+    <div class="testimonial-quote">
+        💬 "很准！解开了我心里的困惑" —— 匿名用户
+    </div>
+</section>
+
+<div class="container" id="read">
 
     <!-- 头部 -->
     <header>

@@ -6,3 +6,4 @@ logs/
 *.bak.*
 .frontend.pid
 .env
+*.bak2
