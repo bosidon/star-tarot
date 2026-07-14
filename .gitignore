@@ -1,0 +1,8 @@
+node_modules/
+*.db
+logs/
+.backup
+*.bak
+*.bak.*
+.frontend.pid
+.env

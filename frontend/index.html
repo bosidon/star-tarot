@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗解读 · 仙宝</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="塔罗占卜解读 - 输入问题，让星辰智慧为你指引方向">
+    <link rel="icon" type="image/x-icon" href="/assets/xianbao/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/xianbao/favicon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/xianbao/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/xianbao/favicon-256.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/xianbao/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
+    <style>@font-face{font-family:'Noto Serif SC';src:url('/assets/xianbao/NotoSerifSC-SemiBold.subset.woff2')format('woff2');font-weight:600;font-display:swap}</style>
+    <link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div id="xianbao-topbar" data-active="tarot"></div>
+
+<div class="container">
+
+    <!-- 头部 -->
+    <header>
+        <h1>✦ 星语塔罗 ✦</h1>
+        <p>输入你的问题，让塔罗的智慧照见内心的答案</p>
+        <button class="history-btn" onclick="TarotApp.openHistory()" title="查看解读记录">📋 我的记录</button>
+    </header>
+
+    <!-- 问题输入区 -->
+    <div class="section-card question-area">
+        <div class="section-title">📝 写下你的问题</div>
+
+        <div class="questioner-row">
+            <label class="questioner-label">👤 提问人</label>
+            <input type="text" id="questionerInput" class="questioner-input" placeholder="你的名字（选填）" maxlength="20">
+        </div>
+        <textarea id="questionInput" placeholder="例如：我最近的工作方向是否适合我？\n我和另一半的关系未来会如何发展？\n请自在书写你心中所想的问题..." rows="4"></textarea>
+
+        <div style="margin-top:16px;">
+            <div class="section-title" style="font-size:0.95rem;">🃏 选择牌阵</div>
+            <div class="spread-selector">
+                <div class="spread-option active" data-spread="single">单张指引</div>
+                <div class="spread-option" data-spread="three">三张牌阵</div>
+                <div class="spread-option" data-spread="horseshoe">马蹍牌阵</div>
+                <div class="spread-option" data-spread="relationship">关系牌阵</div>
+                <div class="spread-option" data-spread="celtic">凯尔特十字</div>
+            </div>
+            <div id="spreadDescription" class="spread-description visible">最简洁的牌阵，适合日常小事或快速获取灵感指引。一张牌直击核心，为你揭示当下最需要关注的能量。</div>
+        </div>
+
+        <div class="draw-methods">
+            <button class="draw-btn btn-ai" id="btnAiDraw">
+                <span class="btn-icon">✦</span>
+                <span>智慧抽牌</span>
+                <span class="btn-sub">星辰之力为你随机选牌</span>
+            </button>
+            <button class="draw-btn btn-self" id="btnSelfDraw">
+                <span class="btn-icon">🖐️</span>
+                <span>线下选牌</span>
+                <span class="btn-sub">从牌库中手动选择牌</span>
+            </button>
+            <button class="draw-btn btn-draw" id="btnDrawMode" onclick="TarotApp.toggleDrawMode()">
+                <span class="btn-icon">🎯</span>
+                <span>线上抽牌</span>
+                <span class="btn-sub">从78张牌中亲手翻牌</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- 卡牌展示区 -->
+    <div class="cards-area">
+        <div class="section-card">
+            <div class="section-title">🃏 塔罗牌局</div>
+            <div class="card-display" id="cardDisplay"></div>
+            <div class="interaction-bar">
+                <button class="glow-btn" id="btnInterpret">🔮 开始解读</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载状态 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">星辰之力正在为你选牌...</div>
+    </div>
+
+    <!-- 解读区 -->
+    <div class="interpretation-area">
+        <div class="section-card">
+            <div class="interpretation-header">
+                <div class="icon">🔮</div>
+                <h2>塔罗解读</h2>
+            </div>
+            <div class="interpretation-content" id="interpretationContent"></div>
+            <div style="display:flex; gap:12px; margin-top:24px; justify-content:center; flex-wrap:wrap;">
+                <button class="glow-btn" id="btnNewQuestion">🔄 重新提问</button>
+                <button class="action-btn" id="btnRedraw">🃏 重新抽牌</button>
+                <div class="download-group">
+                    <button class="action-btn download-trigger">📥 下载</button>
+                    <div class="download-menu">
+                        <button onclick="TarotApp.downloadMd()">📄 Markdown (.md)</button>
+                        <button onclick="TarotApp.downloadTxt()">📝 纯文本 (.txt)</button>
+                        <button onclick="TarotApp.downloadPdf()">📕 PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <p>✦ 星语塔罗 · 塔罗占卜解读 ✦</p>
+        <p style="margin-top:6px;">解读内容仅供参考，仅供自我了解与娱乐</p>
+        <p style="margin-top:6px;">
+            <a href="https://beian.miit.gov.cn/" target="_blank">渝ICP备2025020357号</a>
+        </p>
+    </footer>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+
+<!-- 线上抽牌弹窗 -->
+<div class="modal-overlay" id="drawDeckModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="drawDeckTitle">🃏 线上抽牌</h3>
+            <button class="modal-close" onclick="TarotApp.closeDrawDeck()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="picker-info">
+                <span id="drawDeckStatus">已选 <span style="color:var(--gold);font-weight:700;">0</span> / 1 张</span>
+            </div>
+            <div class="draw-deck" id="drawDeck"></div>
+            <div class="drawn-card-info" id="drawnCardInfo"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="action-btn" onclick="TarotApp.closeDrawDeck()">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 选牌弹窗 -->
+<div class="modal-overlay" id="cardPickerModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>🖐️ 选择你抽到的牌</h3>
+            <button class="modal-close" onclick="TarotApp.closeCardPicker()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="picker-search">
+                <input type="text" id="cardSearchInput" placeholder="🔍 搜索卡牌名称..." class="search-input">
+            </div>
+            <div class="picker-info">
+                <span id="pickerStatus">已选 <span style="color:var(--gold);font-weight:700;">0</span> / 1 张</span>
+            </div>
+            <div class="group-tabs" id="groupTabs"></div>
+            <div class="picker-grid" id="cardPickerGrid"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="action-btn" onclick="TarotApp.closeCardPicker()">取消</button>
+            <button class="glow-btn" id="btnConfirmCards" disabled>确认选牌</button>
+        </div>
+    </div>
+</div>
+
+<!-- 历史记录弹窗 -->
+<div class="modal-overlay" id="historyModal">
+    <div class="modal-box history-box">
+        <div class="modal-header">
+            <h3>📋 我的记录</h3>
+            <button class="modal-close" onclick="TarotApp.closeHistory()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="history-search">
+                <input type="text" id="historySearchName" class="history-search-input" placeholder="🔍 提问人" oninput="TarotApp.searchHistory()">
+                <input type="date" id="historySearchDate" class="history-search-input" title="筛选日期" placeholder="日期" onchange="TarotApp.searchHistory()">
+                <button class="history-search-btn" onclick="TarotApp.searchHistory()">搜索</button>
+            </div>
+            <div class="history-table-wrap">
+                <table class="history-table">
+                    <thead id="historyTableHead"></thead>
+                    <tbody id="historyTableBody">
+                        <tr><td colspan="5" class="history-loading">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="history-pagination" id="historyPagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 历史详情弹窗 -->
+<div class="modal-overlay" id="historyDetailModal">
+    <div class="modal-box history-detail-box">
+        <div class="modal-header">
+            <h3 id="historyDetailTitle">📖 解读详情</h3>
+            <button class="history-download-btn" onclick="TarotApp.downloadHistoryPdf()" title="下载PDF">📥 下载</button>
+            <button class="modal-close" onclick="TarotApp.closeHistoryDetail()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="history-detail-content" id="historyDetailContent"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/xianbao/auth-widget.js"></script>
+<script src="/assets/xianbao/xianbao-topbar.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
