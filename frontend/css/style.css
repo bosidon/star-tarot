@@ -1620,6 +1620,17 @@ footer a {
   50% { transform: translateY(-18px); }
 }
 
+/* Hero底部渐变过渡 */
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-deep) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* ============ 功能卡片 ============ */
 .features {
   display: grid;
