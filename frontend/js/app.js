@@ -1072,18 +1072,6 @@ document.head.appendChild(s);
   draw();
 })();
 
-/* ============ 导航栏滚动效果 ============ */
-(function initNavbar() {
-  const navbar = document.getElementById('navbar');
-  if (!navbar) return;
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  });
-})();
 
 /* ============ 热门牌阵点击 - 滚动到占卜区并切换牌阵 ============ */
 (function initSpreadCards() {
