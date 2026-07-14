@@ -1612,9 +1612,9 @@ footer a {
   width: 100%; height: 100%;
   object-fit: cover;
 }
-.hero-card.hc1 { top: 5%; left: calc(50% - 170px); transform: rotate(-14deg); animation: floatHC1 7s ease-in-out infinite; }
+.hero-card.hc1 { top: 5%; left: calc(50% - 250px); transform: rotate(-14deg); animation: floatHC1 7s ease-in-out infinite; }
 .hero-card.hc2 { top: 2%; left: 50%; transform: translateX(-50%); animation: floatHC2 8s ease-in-out infinite; animation-delay: -2s; }
-.hero-card.hc3 { top: 5%; left: calc(50% + 95px); transform: rotate(14deg); animation: floatHC3 9s ease-in-out infinite; animation-delay: -4s; }
+.hero-card.hc3 { top: 5%; left: calc(50% + 100px); transform: rotate(14deg); animation: floatHC3 9s ease-in-out infinite; animation-delay: -4s; }
 @keyframes floatHC1 {
   0%, 100% { transform: rotate(-14deg) translateY(0); }
   50% { transform: rotate(-14deg) translateY(-14px); }
@@ -1642,7 +1642,7 @@ footer a {
 /* ============ 功能卡片 ============ */
 .features {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0 20px 60px;
   max-width: 960px;
@@ -1823,7 +1823,9 @@ footer a {
   .hero-sub { font-size: 0.9rem; }
   .hero-icon { font-size: 2.2rem; }
   .hero-card { width: 90px; height: 140px; }
-  .features { grid-template-columns: 1fr; gap: 16px; padding: 0 16px 40px; }
+  .hero-card.hc1 { left: calc(50% - 145px); }
+  .hero-card.hc3 { left: calc(50% + 55px); }
+  .features { grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 16px 40px; }
   .spreads-scroll { gap: 14px; }
   .spread-card { flex: 0 0 160px; }
 }
