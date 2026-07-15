@@ -68,7 +68,17 @@ var DrawPage = {
         div.dataset.seq = cardIdx + 1;
         div.dataset.angle = angleDeg;
         div.dataset.radius = arc.radius;
-        div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg"><div class="fan-card-hover-num">' + (cardIdx + 1) + '</div>';
+        var faceSrc = self.getCardFace(card);
+        var revClass = card.isReversed ? ' reversed' : '';
+        div.innerHTML = '<div class="fan-card-inner">' +
+          '<div class="fan-card-front">' +
+            '<img class="fan-card-img" src="/assets/cards/card_back.jpg">' +
+            '<div class="fan-card-hover-num">' + (cardIdx + 1) + '</div>' +
+          '</div>' +
+          '<div class="fan-card-back' + revClass + '">' +
+            '<img class="fan-card-face-img" src="' + faceSrc + '">' +
+          '</div>' +
+        '</div>';
         
         (function(c, el) {
           el.addEventListener('click', function() { self.pickCard(c, el); });
@@ -193,11 +203,8 @@ var DrawPage = {
     el.style.setProperty('box-shadow', '0 0 20px var(--gold)', 'important');
     el.style.setProperty('z-index', '9999', 'important');
     
-    setTimeout(function() {
-      imgSrc = self.getCardFace(card);
-      var img = el.querySelector('.fan-card-img');
-      if (img) img.src = imgSrc;
-    }, 250);
+    // 触发CSS 3D翻转（0.8s rotateY）
+    el.classList.add('flipped');
     
     // Keep flipping class showing for z-index
     
@@ -205,6 +212,9 @@ var DrawPage = {
     setTimeout(function() {
       var slot = document.querySelector('.drawn-slot:not([data-filled="true"])');
       if (!slot) { el.remove(); return; }
+      
+      // 取牌面图路径（已经加载在背面）
+      var imgSrc = self.getCardFace(card);
       
       // 去掉翻转类
       el.classList.remove('flipping', 'hovered');
