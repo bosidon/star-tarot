@@ -112,7 +112,6 @@ const TarotApp = {
   },
 
   bindEvents() {
-    document.getElementById('btnAiDraw').addEventListener('click', () => this.aiDraw());
     document.getElementById('btnSelfDraw').addEventListener('click', () => this.openCardPicker());
     document.getElementById('btnConfirmCards').addEventListener('click', () => this.confirmUserCards());
     document.getElementById('btnRedraw').addEventListener('click', () => this.reset());

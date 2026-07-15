@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>塔罗解读 · 仙宝</title>
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=9">
     <meta name="description" content="塔罗占卜解读 - 输入问题，让星辰智慧为你指引方向">
     <link rel="icon" type="image/x-icon" href="/assets/xianbao/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/xianbao/favicon-16.png">
@@ -111,20 +111,15 @@
             <div class="step-body">
                 <div class="step-title">连接星辰之力</div>
                 <div class="draw-methods">
-            <button class="draw-btn btn-ai" id="btnAiDraw">
-                <span class="btn-icon">✦</span>
-                <span>智慧抽牌</span>
-                <span class="btn-sub">星辰之力为你随机选牌</span>
-            </button>
-            <button class="draw-btn btn-self" id="btnSelfDraw">
+            <button class="draw-btn draw-btn-compact" id="btnSelfDraw">
                 <span class="btn-icon">🖐️</span>
                 <span>线下选牌</span>
-                <span class="btn-sub">从牌库中手动选择牌</span>
+                <span class="btn-sub">从五大牌组中挑选你抽到的牌</span>
             </button>
-            <button class="draw-btn btn-draw" id="btnDrawMode" onclick="TarotApp.toggleDrawMode()">
+            <button class="draw-btn draw-btn-compact" id="btnDrawMode" onclick="TarotApp.toggleDrawMode()">
                 <span class="btn-icon">🎯</span>
                 <span>线上抽牌</span>
-                <span class="btn-sub">从78张牌中亲手翻牌</span>
+                <span class="btn-sub">感应能量，亲手翻开你的牌</span>
             </button>
                 </div>
             </div>
@@ -273,6 +268,6 @@
 
 <script src="/assets/xianbao/auth-widget.js"></script>
 <script src="/assets/xianbao/xianbao-topbar.js"></script>
-<script src="js/app.js?v=3"></script>
+<script src="js/app.js?v=4"></script>
 </body>
 </html>

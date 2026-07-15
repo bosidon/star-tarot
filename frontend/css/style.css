@@ -366,6 +366,17 @@ header p {
   box-shadow: 0 0 20px rgba(201,168,76,0.2);
 }
 
+
+/* 紧凑型抽牌按钮 */
+.draw-btn-compact {
+  padding: 16px 20px 14px !important;
+}
+.draw-btn-compact .btn-icon {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 1.2rem !important;
+}
+
 .draw-btn .btn-sub {
   font-size: 0.85rem;
   color: var(--text-muted);
