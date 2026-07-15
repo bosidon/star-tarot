@@ -404,7 +404,7 @@ const TarotApp = {
   },
 
   showInterpretButton() {
-    document.querySelector('.interaction-bar').classList.add('visible');
+    const ib2 = document.querySelector('.interaction-bar'); if (ib2) ib2.classList.add('visible');
   },
 
   // ============ 解读（核心优化） ============
@@ -827,12 +827,12 @@ const TarotApp = {
     this.currentQuestion = '';
     this._interpreting = false;
 
-    document.querySelector('.draw-area').classList.remove('visible');
-    document.querySelector('.interpretation-area').classList.remove('visible');
+    const da = document.querySelector('.draw-area'); if (da) da.classList.remove('visible');
+    const ia = document.querySelector('.interpretation-area'); if (ia) ia.classList.remove('visible');
     document.getElementById('interpretationContent').innerHTML = '';
     const actEl = document.getElementById('interpretationActions');
     if (actEl) actEl.style.display = 'none';
-    document.querySelector('.interaction-bar').classList.remove('visible');
+    const ib = document.querySelector('.interaction-bar'); if (ib) ib.classList.remove('visible');
     document.getElementById('questionInput').value = '';
     document.getElementById('questionInput').focus();
 
