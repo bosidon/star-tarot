@@ -404,6 +404,95 @@ header p {
   background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
 }
 
+/* 牌阵中央光晕 */
+.card-display::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.card-display > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 单张牌阵：居中放大 */
+.card-display[data-count="1"] {
+  justify-content: center;
+}
+.card-display[data-count="1"] .tarot-card {
+  width: 220px;
+  height: 418px;
+}
+
+/* 三张牌阵：间距加大 */
+.card-display[data-count="3"] {
+  gap: 32px;
+}
+
+/* 马蹄牌阵(5张)：V形排列 */
+.card-display[data-count="5"] {
+  gap: 20px;
+}
+.card-display[data-count="5"] .tarot-card:nth-child(1) { transform: translateY(20px); }
+.card-display[data-count="5"] .tarot-card:nth-child(2) { transform: translateY(0); }
+.card-display[data-count="5"] .tarot-card:nth-child(3) { transform: translateY(40px); }
+.card-display[data-count="5"] .tarot-card:nth-child(4) { transform: translateY(0); }
+.card-display[data-count="5"] .tarot-card:nth-child(5) { transform: translateY(20px); }
+
+/* 关系牌阵(6张)：两排 */
+.card-display[data-count="6"] {
+  gap: 20px;
+}
+.card-display[data-count="6"] .tarot-card:nth-child(1),
+.card-display[data-count="6"] .tarot-card:nth-child(2),
+.card-display[data-count="6"] .tarot-card:nth-child(3) {
+  transform: translateY(0);
+}
+.card-display[data-count="6"] .tarot-card:nth-child(4),
+.card-display[data-count="6"] .tarot-card:nth-child(5),
+.card-display[data-count="6"] .tarot-card:nth-child(6) {
+  transform: translateY(20px);
+}
+
+/* 凯尔特十字(10张)：十字+柱 */
+.card-display[data-count="10"] {
+  gap: 14px;
+}
+.card-display[data-count="10"] .tarot-card:nth-child(1),
+.card-display[data-count="10"] .tarot-card:nth-child(2) { transform: translateY(0); }
+.card-display[data-count="10"] .tarot-card:nth-child(3),
+.card-display[data-count="10"] .tarot-card:nth-child(4) { transform: translateY(30px); }
+.card-display[data-count="10"] .tarot-card:nth-child(5),
+.card-display[data-count="10"] .tarot-card:nth-child(6) { transform: translateY(60px); }
+.card-display[data-count="10"] .tarot-card:nth-child(7),
+.card-display[data-count="10"] .tarot-card:nth-child(8) { transform: translateY(90px); }
+.card-display[data-count="10"] .tarot-card:nth-child(9),
+.card-display[data-count="10"] .tarot-card:nth-child(10) { transform: translateY(120px); }
+
+/* 牌阵名称装饰 */
+.spread-badge {
+  text-align: center;
+  margin-bottom: 8px;
+}
+.spread-badge span {
+  display: inline-block;
+  padding: 6px 20px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(124,58,237,0.2));
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+}
+
 .tarot-card {
   width: 200px;
   height: 380px;
@@ -1346,6 +1435,21 @@ footer a {
   line-height: 1.4;
 }
 
+@media (max-width: 768px) {
+  .card-display[data-count="5"] .tarot-card:nth-child(1),
+  .card-display[data-count="5"] .tarot-card:nth-child(2),
+  .card-display[data-count="5"] .tarot-card:nth-child(3),
+  .card-display[data-count="5"] .tarot-card:nth-child(4),
+  .card-display[data-count="5"] .tarot-card:nth-child(5),
+  .card-display[data-count="6"] .tarot-card:nth-child(1),
+  .card-display[data-count="6"] .tarot-card:nth-child(2),
+  .card-display[data-count="6"] .tarot-card:nth-child(3),
+  .card-display[data-count="6"] .tarot-card:nth-child(4),
+  .card-display[data-count="6"] .tarot-card:nth-child(5),
+  .card-display[data-count="6"] .tarot-card:nth-child(6),
+  .card-display[data-count="10"] .tarot-card { transform: none !important; }
+}
+
 /* 响应式：牌局 */
 @media (max-width: 768px) {
   .tarot-card { width: 140px; height: 266px; }
@@ -1461,6 +1565,48 @@ footer a {
   border-radius: 10px;
   z-index: 3;
   pointer-events: none;
+}
+
+
+/* ============ 抽牌弹窗分页 ============ */
+.draw-deck-pag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+
+.pag-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(25,18,48,0.8);
+  color: var(--gold);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pag-arrow:hover:not(:disabled) {
+  background: rgba(201,168,76,0.2);
+  border-color: var(--gold);
+}
+.pag-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.draw-deck-pag .pag-info {
+  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  min-width: 48px;
+  text-align: center;
 }
 
 .drawn-card-info {

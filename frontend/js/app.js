@@ -345,6 +345,13 @@ const TarotApp = {
     const area = document.querySelector('.cards-area');
     area.classList.add('visible');
     container.setAttribute('data-count', cards.length);
+    
+    // 更新标题为牌阵名称
+    var titleEl = area.querySelector('.section-title');
+    if (titleEl) {
+      var config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
+      titleEl.innerHTML = '🃏 ' + config.label;
+    }
 
     // 花色→CSS类映射
     const suitClasses = {
@@ -856,14 +863,17 @@ const TarotApp = {
     this.drawDeckCards = [];
   },
 
+  drawDeckAllCards: [],  // 所有78张牌的数据
+  drawDeckPage: 0,      // 当前页码
+  drawDeckPerPage: 24,  // 每页24张
+
   initDrawDeck() {
     const container = document.getElementById('drawDeck');
     const infoArea = document.getElementById('drawnCardInfo');
-    container.innerHTML = '';
-    infoArea.innerHTML = '';
-    infoArea.classList.remove('visible');
     
     this.drawDeckCards = [];
+    this.drawDeckAllCards = [];
+    this.drawDeckPage = 0;
     
     const config = this.SPREAD_CONFIG[this.currentSpread];
     const maxCards = config.count;
@@ -874,29 +884,76 @@ const TarotApp = {
     document.getElementById('drawDeckStatus').innerHTML = 
       '已选 <span style="color:var(--gold);font-weight:700;">0</span> / ' + maxCards + ' 张';
     
-    // 创建78张牌的背面，随机排列
+    // 创建78张牌，随机排列
     const deck = [...Array(78).keys()];
     this.shuffleArray(deck);
     
-    deck.forEach((cardIndex, i) => {
-      const card = document.createElement('div');
-      card.className = 'deck-card';
-      card.dataset.index = cardIndex;
-      card.dataset.position = i;
-      card.innerHTML = `
-        <div class="deck-card-inner">
-          <div class="deck-card-front">
-            <img src="/assets/cards/card_back.jpg" alt="牌背面">
-            <div class="deck-number">${i + 1}</div>
-          </div>
-          <div class="deck-card-back">
-            <img src="${this.getCardImageByIndex(cardIndex)}" alt="牌面">
-          </div>
-        </div>
-      `;
-      card.addEventListener('click', () => this.flipDeckCard(card));
+    // 预创建所有牌的数据
+    var self = this;
+    deck.forEach(function(cardIndex, i) {
+      self.drawDeckAllCards.push({
+        index: cardIndex,
+        position: i,
+        seq: i + 1,
+        flipped: false,
+        reversed: false,
+        imgSrc: self.getCardImageByIndex(cardIndex)
+      });
+    });
+    
+    // 渲染第一页
+    this.renderDrawDeckPage();
+  },
+
+  renderDrawDeckPage() {
+    var self = this;
+    var container = document.getElementById('drawDeck');
+    container.innerHTML = '';
+    
+    var start = this.drawDeckPage * this.drawDeckPerPage;
+    var end = Math.min(start + this.drawDeckPerPage, 78);
+    var items = this.drawDeckAllCards.slice(start, end);
+    
+    items.forEach(function(data) {
+      var card = document.createElement('div');
+      card.className = 'deck-card' + (data.flipped ? ' flipped' : '');
+      card.dataset.origIdx = data.position;
+      if (data.reversed) {
+        card.innerHTML = '<div class="deck-card-inner">' +
+          '<div class="deck-card-front"><img src="/assets/cards/card_back.jpg" alt="牌背面"><div class="deck-number">' + data.seq + '</div></div>' +
+          '<div class="deck-card-back reversed"><img src="' + data.imgSrc + '" alt="牌面"></div>' +
+          '</div>';
+      } else {
+        card.innerHTML = '<div class="deck-card-inner">' +
+          '<div class="deck-card-front"><img src="/assets/cards/card_back.jpg" alt="牌背面"><div class="deck-number">' + data.seq + '</div></div>' +
+          '<div class="deck-card-back"><img src="' + data.imgSrc + '" alt="牌面"></div>' +
+          '</div>';
+      }
+      card.addEventListener('click', function() { self.flipDeckCard(card); });
       container.appendChild(card);
     });
+    
+    // 分页控件
+    this.renderDrawPagination();
+  },
+
+  renderDrawPagination() {
+    var pagEl = document.getElementById('drawDeckPag');
+    if (!pagEl) return;
+    var totalPages = Math.ceil(78 / this.drawDeckPerPage);
+    if (totalPages <= 1) { pagEl.innerHTML = ''; return; }
+    
+    var self = this;
+    var html = '';
+    html += '<button class="pag-arrow" ' + (this.drawDeckPage === 0 ? 'disabled' : '') + ' onclick="TarotApp.goDrawPage(' + (this.drawDeckPage - 1) + ')">◀</button>';
+    html += '<span class="pag-info">' + (this.drawDeckPage + 1) + ' / ' + totalPages + '</span>';
+    html += '<button class="pag-arrow" ' + (this.drawDeckPage >= totalPages - 1 ? 'disabled' : '') + ' onclick="TarotApp.goDrawPage(' + (this.drawDeckPage + 1) + ')">▶</button>';
+    pagEl.innerHTML = html;
+  },
+
+  goDrawPage(page) {
+    this.drawDeckPage = page;
+    this.renderDrawDeckPage();
   },
 
   shuffleArray(array) {
@@ -925,16 +982,21 @@ const TarotApp = {
       return;
     }
     
-    const cardIndex = parseInt(cardElement.dataset.index);
-    const card = this.allCardsData[cardIndex];
+    var origIdx = parseInt(cardElement.dataset.origIdx);
+    var deckData = this.drawDeckAllCards[origIdx];
+    if (!deckData) return;
     
+    var cardIndex = deckData.index;
+    const card = this.allCardsData[cardIndex];
     if (!card) return;
     
     cardElement.classList.add('flipped');
+    deckData.flipped = true;
     
     const reversed = Math.random() < 0.3;
     if (reversed) {
       cardElement.querySelector('.deck-card-back').classList.add('reversed');
+      deckData.reversed = true;
     }
     
     const drawnCard = { ...card, reversed };
