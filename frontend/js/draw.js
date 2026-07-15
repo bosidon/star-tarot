@@ -6,6 +6,7 @@ var DrawPage = {
   async init() {
     await this.loadCards();
     this.buildArcs();
+    this.initHoverDetection();
   },
 
   async loadCards() {
@@ -54,9 +55,16 @@ var DrawPage = {
         div.style.left = (x - cardW / 2) + 'px';
         div.style.top = (y - cardH / 2) + 'px';
         div.style.setProperty('--r', rot + 'deg');
+        // Radial outward offset for hover
+        var ox = Math.cos(angleRad) * 30;
+        var oy = Math.sin(angleRad) * 30;
+        div.style.setProperty('--ox', ox + 'px');
+        div.style.setProperty('--oy', oy + 'px');
         div.style.transform = 'rotate(var(--r, 0deg))';
         div.dataset.idx = cardIdx;
         div.dataset.seq = cardIdx + 1;
+        div.dataset.angle = angleDeg;
+        div.dataset.radius = arc.radius;
         div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg"><div class="fan-card-hover-num">' + (cardIdx + 1) + '</div>';
         
         (function(c, el) {
@@ -66,6 +74,73 @@ var DrawPage = {
         container.appendChild(div);
         cardIdx++;
       }
+    });
+  },
+
+  initHoverDetection: function() {
+    var self = this;
+    var row = document.getElementById('fan-row-1');
+    var cx = 960, cy = 1600;
+    var cards = row.querySelectorAll('.fan-card');
+    
+    // Build angle->card map for each arc
+    var arcGroups = {};
+    cards.forEach(function(el) {
+      var r = parseFloat(el.dataset.radius);
+      if (!arcGroups[r]) arcGroups[r] = [];
+      arcGroups[r].push(el);
+    });
+    
+    row.addEventListener('mousemove', function(e) {
+      var rect = row.getBoundingClientRect();
+      var mx = e.clientX - rect.left;
+      var my = e.clientY - rect.top;
+      
+      // Angle from arc center to mouse
+      var dx = mx - cx;
+      var dy = my - cy;
+      var mouseAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+      var mouseDist = Math.sqrt(dx * dx + dy * dy);
+      
+      // Find best card: check each arc from inner (on top) to outer
+      var hit = null;
+      var radii = Object.keys(arcGroups).map(Number).sort(function(a,b) { return a - b; }); // inner first = on top
+      
+      for (var ri = 0; ri < radii.length; ri++) {
+        var group = arcGroups[radii[ri]];
+        var r = radii[ri];
+        
+        // Distance check: within ~100px of this arc's radius
+        if (mouseDist < r - 120 || mouseDist > r + 120) continue;
+        
+        // Find closest card by angle
+        var best = null, bestDiff = Infinity;
+        for (var ci = 0; ci < group.length; ci++) {
+          var cardAngle = parseFloat(group[ci].dataset.angle);
+          var diff = Math.abs(mouseAngle - cardAngle);
+          if (diff > 180) diff = 360 - diff;
+          if (diff < bestDiff) {
+            bestDiff = diff;
+            best = group[ci];
+          }
+        }
+        
+        // Check if mouse is within the angular width of this card
+        // Card angular half-width ~ half of step
+        if (best && bestDiff < 1.5) {
+          hit = best;
+          break; // inner arc wins
+        }
+      }
+      
+      // Update hovered class
+      cards.forEach(function(el) { el.classList.remove('hovered'); });
+      if (hit) hit.classList.add('hovered');
+    });
+    
+    // Remove on mouseleave
+    row.addEventListener('mouseleave', function() {
+      cards.forEach(function(el) { el.classList.remove('hovered'); });
     });
   },
 
@@ -111,7 +186,7 @@ var DrawPage = {
     var row = el.parentElement;
     if (row) row.classList.add('flipping');
     el.style.pointerEvents = 'none';
-    el.style.setProperty('transform', 'scale(1.3) rotate(var(--r, 0deg))', 'important');
+    el.style.setProperty('transform', 'translate(var(--ox), var(--oy)) rotate(var(--r, 0deg))', 'important');
     el.style.setProperty('box-shadow', '0 0 20px var(--gold)', 'important');
     el.style.setProperty('z-index', '9999', 'important');
     
