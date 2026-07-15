@@ -225,7 +225,7 @@ header p {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 .questioner-label {
     color: var(--gold, #d4a853);
@@ -683,7 +683,7 @@ header p {
 
 /* ============ 按钮样式 ============ */
 .glow-btn {
-  padding: 12px 32px;
+  padding: 6px;
   border: 1px solid var(--gold);
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, rgba(212,168,83,0.1), rgba(124,58,237,0.1));
@@ -1223,7 +1223,7 @@ footer a {
   font-size: 0.95rem;
   outline: none;
   transition: var(--transition);
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .search-input:focus {
@@ -1235,7 +1235,7 @@ footer a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   color: var(--text-muted);
   font-size: 0.88rem;
 }
@@ -2213,7 +2213,7 @@ footer a {
   transform: scale(1.02) rotate(2deg);
   box-shadow: 0 12px 40px rgba(201,168,76,0.12);
 }
-.spread-card .sc-icon { font-size: 2rem; margin-bottom: 12px; }
+.spread-card .sc-icon { font-size: 2rem; margin-bottom: 6px; }
 .spread-card h4 {
   font-size: 1rem;
   color: var(--gold-light);
