@@ -26,17 +26,17 @@ var DrawPage = {
     var self = this;
     var container = document.getElementById('fan-row-1');
     var arcs = [
-      { radius: 1500, count: 28, startIdx: 0 },
-      { radius: 1300, count: 26, startIdx: 28 },
-      { radius: 1100, count: 24, startIdx: 54 }
+      { radius: 800, count: 35, startIdx: 0 },
+      { radius: 600, count: 26, startIdx: 35 },
+      { radius: 400, count: 17, startIdx: 61 }
     ];
     
-    var cx = 960, cy = 1600;
+    var cx = 960, cy = 900;
     var cardW = 80, cardH = 150;
     
     var cardIdx = 0;
     arcs.forEach(function(arc) {
-      var totalAngle = 30;
+      var totalAngle = 120;
       var halfAngle = totalAngle / 2;
       var step = totalAngle / (arc.count - 1);
       
@@ -56,8 +56,8 @@ var DrawPage = {
         div.style.top = (y - cardH / 2) + 'px';
         div.style.setProperty('--r', rot + 'deg');
         // Radial outward offset for hover
-        var ox = Math.cos(angleRad) * 30;
-        var oy = Math.sin(angleRad) * 30;
+        var ox = Math.cos(angleRad) * 10;
+        var oy = Math.sin(angleRad) * 10;
         div.style.setProperty('--ox', ox + 'px');
         div.style.setProperty('--oy', oy + 'px');
         div.style.transform = 'rotate(var(--r, 0deg))';
@@ -80,7 +80,7 @@ var DrawPage = {
   initHoverDetection: function() {
     var self = this;
     var row = document.getElementById('fan-row-1');
-    var cx = 960, cy = 1600;
+    var cx = 960, cy = 900;
     var cards = row.querySelectorAll('.fan-card');
     
     // Build angle->card map for each arc
