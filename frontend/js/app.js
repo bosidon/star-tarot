@@ -212,7 +212,7 @@ const TarotApp = {
       const isRev = selCard?.reversed || false;
 
       return `
-        <div class="picker-card ${isSelected ? 'selected' : ''} ${isRev ? 'reversed' : ''}"
+        <div class="picker-card ${isSelected ? 'selected' : ''} ${isRev ? 'reversed' : ''}">
           <img class="picker-img" src="${getCardImagePath(card)}" alt="${card.name}" 
                onerror="this.style.display='none';this.parentElement.querySelector('.picker-fallback').style.display='flex'">
           <div class="picker-fallback" style="display:none">
