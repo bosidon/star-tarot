@@ -26,12 +26,11 @@ var DrawPage = {
     var self = this;
     var container = document.getElementById('fan-row-1');
     var arcs = [
-      { radius: 600, count: 48, startIdx: 0 },
-      { radius: 400, count: 30, startIdx: 48 },
-      { radius: 200, count: 0, startIdx: 78 }
+      { radius: 400, count: 52, startIdx: 0 },
+      { radius: 200, count: 26, startIdx: 52 }
     ];
     
-    var cx = 960, cy = 700;
+    var cx = 960, cy = 500;
     var cardW = 80, cardH = 150;
     
     var cardIdx = 0;
@@ -65,7 +64,7 @@ var DrawPage = {
         div.dataset.seq = cardIdx + 1;
         div.dataset.angle = angleDeg;
         div.dataset.radius = arc.radius;
-        div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg">';
+        div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg"><div class="fan-card-hover-num">' + (cardIdx + 1) + '</div>';
         
         (function(c, el) {
           el.addEventListener('click', function() { self.pickCard(c, el); });
@@ -80,7 +79,7 @@ var DrawPage = {
   initHoverDetection: function() {
     var self = this;
     var row = document.getElementById('fan-row-1');
-    var cx = 960, cy = 700;
+    var cx = 960, cy = 500;
     var cards = row.querySelectorAll('.fan-card');
     
     // Build angle->card map for each arc
@@ -204,7 +203,7 @@ var DrawPage = {
       if (!slot) { el.remove(); return; }
       
       // 去掉翻转类
-      el.classList.remove('flipping');
+      el.classList.remove('flipping', 'hovered');
       var row = el.parentElement;
       if (row) row.classList.remove('flipping');
       
