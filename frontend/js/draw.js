@@ -196,12 +196,7 @@ var DrawPage = {
     setTimeout(function() {
       imgSrc = self.getCardFace(card);
       var img = el.querySelector('.fan-card-img');
-      if (img) {
-        img.src = imgSrc;
-        if (card.isReversed) {
-          img.style.transform = 'rotate(180deg)';
-        }
-      }
+      if (img) img.src = imgSrc;
     }, 250);
     
     // Keep flipping class showing for z-index
@@ -242,9 +237,6 @@ var DrawPage = {
       setTimeout(function() {
         slot.className = 'drawn-card';
         slot.innerHTML = '<img src="' + imgSrc + '">';
-        if (card.isReversed) {
-          slot.querySelector('img').style.transform = 'rotate(180deg)';
-        }
         self.drawnCards.push(card);
         el.remove();
       }, 3000);
