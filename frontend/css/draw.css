@@ -131,23 +131,6 @@
   z-index: 100;
   pointer-events: none;
 }
-.fan-card-hover-num {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffd700;
-  font-size: 1.5rem;
-  font-weight: 900;
-  text-shadow: 0 0 12px rgba(0,0,0,0.9), 0 0 4px #000;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-  z-index: 1000;
-}
-.fan-card.hovered .fan-card-hover-num {
-  opacity: 1;
-}
 /* Card flip animation */
 .fan-card.flipping .fan-card-img {
   animation: cardFlip 0.5s ease-in-out;
@@ -163,10 +146,6 @@
   z-index: 9999 !important;
   transform: translate(var(--ox), var(--oy)) rotate(var(--r, 0deg)) !important;
   box-shadow: 0 0 20px var(--gold);
-}
-/* Hide hover num on flipping card */
-.fan-card.flipping.hovered .fan-card-hover-num {
-  opacity: 0 !important;
 }
 /* Block hover on all cards while flipping */
 .fan-card.flipping.hovered {

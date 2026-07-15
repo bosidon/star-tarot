@@ -65,7 +65,7 @@ var DrawPage = {
         div.dataset.seq = cardIdx + 1;
         div.dataset.angle = angleDeg;
         div.dataset.radius = arc.radius;
-        div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg"><div class="fan-card-hover-num">' + (cardIdx + 1) + '</div>';
+        div.innerHTML = '<img class="fan-card-img" src="/assets/cards/card_back.jpg">';
         
         (function(c, el) {
           el.addEventListener('click', function() { self.pickCard(c, el); });
@@ -219,19 +219,16 @@ var DrawPage = {
       var dx = sr.left + sr.width / 2 - cx;
       var dy = sr.top + sr.height / 2 - cy;
       
-      // 取当前旋转角度
-      var rot = getComputedStyle(el).getPropertyValue('--r').trim() || '0deg';
-      
-      // 冻结：位置固定，104x195，带旋转
+      // 冻结：位置固定，104x195
       el.style.cssText = 'position:fixed;left:' + (cx - 52) + 'px;top:' + (cy - 97.5) + 'px;' +
         'width:104px;height:195px;margin:0;border-radius:8px;z-index:99999;' +
         'box-shadow:0 0 20px var(--gold);' +
-        'transform:translate(0,0) rotate(' + rot + ');transition:none;pointer-events:none';
+        'transform:translate(0,0);transition:none;pointer-events:none';
       
-      // 3秒直线飞行（尺寸/角度不变）
+      // 3秒直线飞行（尺寸不变，不偏转）
       void el.offsetHeight;
       el.style.transition = 'transform 3s linear';
-      el.style.setProperty('transform', 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + ')', 'important');
+      el.style.setProperty('transform', 'translate(' + dx + 'px,' + dy + 'px)', 'important');
       
       // 到达后：卡已在槽位，直接填槽，不需过渡
       setTimeout(function() {
