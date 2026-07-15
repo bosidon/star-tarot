@@ -26,12 +26,12 @@ var DrawPage = {
     var self = this;
     var container = document.getElementById('fan-row-1');
     var arcs = [
-      { radius: 800, count: 35, startIdx: 0 },
-      { radius: 600, count: 26, startIdx: 35 },
-      { radius: 400, count: 17, startIdx: 61 }
+      { radius: 600, count: 48, startIdx: 0 },
+      { radius: 400, count: 30, startIdx: 48 },
+      { radius: 200, count: 0, startIdx: 78 }
     ];
     
-    var cx = 960, cy = 900;
+    var cx = 960, cy = 700;
     var cardW = 80, cardH = 150;
     
     var cardIdx = 0;
@@ -80,7 +80,7 @@ var DrawPage = {
   initHoverDetection: function() {
     var self = this;
     var row = document.getElementById('fan-row-1');
-    var cx = 960, cy = 900;
+    var cx = 960, cy = 700;
     var cards = row.querySelectorAll('.fan-card');
     
     // Build angle->card map for each arc
