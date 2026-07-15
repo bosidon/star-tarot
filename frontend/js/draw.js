@@ -232,21 +232,19 @@ var DrawPage = {
       var dx = sr.left + sr.width / 2 - cx;
       var dy = sr.top + sr.height / 2 - cy;
       
-      // 冻结：固定在当前位置（保持当前尺寸和旋转）
+      // 冻结：位置尺寸一步到位(104x195)，用transform模拟当前外观
+      var rotDeg = parseFloat(el.dataset.angle) + 90;
       var curW = cr.width;
       var curH = cr.height;
-      el.style.cssText = 'position:fixed;left:' + (cx - curW/2) + 'px;top:' + (cy - curH/2) + 'px;' +
-        'width:' + curW + 'px;height:' + curH + 'px;margin:0;border-radius:8px;z-index:99999;' +
+      el.style.cssText = 'position:fixed;left:' + (cx - 52) + 'px;top:' + (cy - 97.5) + 'px;' +
+        'width:104px;height:195px;margin:0;border-radius:8px;z-index:99999;' +
         'box-shadow:0 0 20px var(--gold);' +
-        'pointer-events:none';
+        'pointer-events:none;' +
+        'transform:rotate(' + rotDeg + 'deg) scale(' + (curW/104) + ',' + (curH/195) + ')';
       
-      // 1s 逐渐切换到飞行状态（放大到 104x195 + 摆正）
+      // 1s transform-only 过渡：逐渐摆正 + 恢复原始尺寸（不触发布局，无抖动）
       void el.offsetHeight;
-      el.style.transition = 'all 1s cubic-bezier(0.25, 0.1, 0.25, 1)';
-      el.style.width = '104px';
-      el.style.height = '195px';
-      el.style.left = (cx - 52) + 'px';
-      el.style.top = (cy - 97.5) + 'px';
+      el.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1)';
       el.style.transform = 'none';
       
       // 1s 后：3s 直线飞向槽位
