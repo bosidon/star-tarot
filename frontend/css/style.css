@@ -251,6 +251,27 @@ header p {
 .questioner-input::placeholder {
     color: rgba(255,255,255,0.3);
 }
+
+/* 单行问题输入框 */
+.question-input-single {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.4s ease;
+}
+.question-input-single:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.25), 0 0 60px rgba(124,58,237,0.1), inset 0 0 30px rgba(201,168,76,0.03);
+}
+.question-input-single::placeholder {
+  color: var(--text-muted);
+}
 .question-area textarea {
   width: 100%;
   min-height: 100px;
