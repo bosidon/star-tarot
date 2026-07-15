@@ -213,7 +213,6 @@ const TarotApp = {
 
       return `
         <div class="picker-card ${isSelected ? 'selected' : ''} ${isRev ? 'reversed' : ''}"
-             data-id="${card.id}" onclick="TarotApp.toggleCard(${card.id})">
           <img class="picker-img" src="${getCardImagePath(card)}" alt="${card.name}" 
                onerror="this.style.display='none';this.parentElement.querySelector('.picker-fallback').style.display='flex'">
           <div class="picker-fallback" style="display:none">
@@ -231,16 +230,6 @@ const TarotApp = {
 
 
   // ============ 选牌交互 ============
-  toggleCard(cardId) {
-    const idx = this.drawnCards.findIndex(c => c.id === cardId);
-    if (idx !== -1) {
-      // 已选中 → 取消选择
-      this.drawnCards.splice(idx, 1);
-      this.selectedCardsCount--;
-      this.renderGroup(this.currentGroup);
-      this.updatePickerStatus();
-    }
-  },
 
   selectCard(cardId, reversed) {
     const maxCards = (this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single).count;
