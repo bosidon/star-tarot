@@ -234,8 +234,7 @@ const TarotApp = {
   toggleCard(cardId) {
     const idx = this.drawnCards.findIndex(c => c.id === cardId);
     if (idx !== -1) {
-      this.drawnCards.splice(idx, 1);
-      this.selectedCardsCount--;
+      this.drawnCards[idx].reversed = !this.drawnCards[idx].reversed;
       this.renderGroup(this.currentGroup);
       this.updatePickerStatus();
     }
@@ -274,9 +273,7 @@ const TarotApp = {
     status.innerHTML = `已选 <span style="color:var(--gold);font-weight:700;">${this.selectedCardsCount}</span> / ${maxCards} 张`;
     btn.disabled = this.selectedCardsCount !== maxCards;
 
-    if (this.selectedCardsCount > 0) {
-      status.innerHTML += ' &nbsp;·&nbsp; 点击已选卡牌切换正/逆位';
-    }
+
   },
 
   openCardPicker() {
