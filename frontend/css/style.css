@@ -2088,7 +2088,7 @@ footer a {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 36px 24px;
+  padding: 20px 20px;
   text-align: center;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -2102,14 +2102,14 @@ footer a {
   background: rgba(35, 25, 60, 0.9);
 }
 .feature-card .fc-icon {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+  font-size: 2rem;
+  margin-bottom: 10px;
 }
 .feature-card h3 {
   font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--gold-light);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .feature-card p {
   color: var(--text-muted);
