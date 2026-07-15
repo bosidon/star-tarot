@@ -221,7 +221,6 @@ const TarotApp = {
           </div>
           <div class="picker-name">${card.name}</div>
           
-          ${isSelected ? `<div class="picker-badge">${isRev ? '逆位' : '正位'}</div>` : ''}
         </div>
       `;
     }).join('');
