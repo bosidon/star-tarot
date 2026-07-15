@@ -1175,7 +1175,7 @@ footer a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 6px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -1282,7 +1282,7 @@ footer a {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
-  max-height: 340px;
+  max-height: 480px;
   overflow-y: auto;
   padding: 4px;
 }
@@ -1561,8 +1561,6 @@ footer a {
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 10px;
   margin-top: 15px;
-  max-height: 60vh;
-  overflow-y: auto;
   padding: 10px;
 }
 
@@ -1646,14 +1644,6 @@ footer a {
 
 
 /* ============ 抽牌弹窗分页 ============ */
-.draw-deck-pag {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin: 16px 0 8px;
-}
-
 .pag-arrow {
   width: 36px;
   height: 36px;
@@ -1677,28 +1667,7 @@ footer a {
   cursor: default;
 }
 
-.draw-deck-pag .pag-info {
-  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  letter-spacing: 2px;
-  min-width: 48px;
-  text-align: center;
-}
 
-.drawn-card-info {
-  display: none;
-  margin-top: 20px;
-  padding: 20px;
-  background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(45, 27, 105, 0.3));
-  border-radius: var(--radius);
-  border: 1px solid var(--gold);
-}
-
-.drawn-card-info.visible {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
 
 .drawn-card-detail h3 {
   color: var(--gold);
@@ -1769,7 +1738,9 @@ footer a {
   }
   
   .deck-card {
-    height: 115px;
+    width: auto;
+    aspect-ratio: 10 / 19;
+    height: auto;
   }
 }
 

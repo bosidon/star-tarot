@@ -141,9 +141,7 @@ const TarotApp = {
       });
     });
 
-    document.getElementById('cardSearchInput').addEventListener('input', (e) => {
-      this.filterGroupCards(e.target.value);
-    });
+    const si = document.getElementById('cardSearchInput'); if (si) si.addEventListener('input', (e) => this.filterGroupCards(e.target.value));
 
     // 点击弹窗外关闭
     document.getElementById('cardPickerModal').addEventListener('click', (e) => {
@@ -202,7 +200,7 @@ const TarotApp = {
     this.currentGroup = key;
     document.querySelectorAll('.group-tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`.group-tab[data-group="${key}"]`).classList.add('active');
-    document.getElementById('cardSearchInput').value = '';
+    const si2 = document.getElementById('cardSearchInput'); if (si2) si2.value = '';
     this.renderGroup(key);
   },
 
@@ -864,7 +862,7 @@ const TarotApp = {
 
   drawDeckAllCards: [],  // 所有78张牌的数据
   drawDeckPage: 0,      // 当前页码
-  drawDeckPerPage: 26,  // 每页24张
+  drawDeckPerPage: 78,  // 每页24张
 
   initDrawDeck() {
     const container = document.getElementById('drawDeck');
@@ -1018,6 +1016,7 @@ const TarotApp = {
 
   showDrawnCardInfo() {
     const infoArea = document.getElementById('drawnCardInfo');
+    if (!infoArea) return;
     const config = this.SPREAD_CONFIG[this.currentSpread];
     const positions = config.positions;
     

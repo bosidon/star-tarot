@@ -190,17 +190,13 @@
             <button class="modal-close" onclick="TarotApp.closeCardPicker()">&times;</button>
         </div>
         <div class="modal-body">
-            <div class="picker-search">
-                <input type="text" id="cardSearchInput" placeholder="🔍 搜索卡牌名称..." class="search-input">
-            </div>
+    
             <div class="picker-info">
                 <span id="pickerStatus">已选 <span style="color:var(--gold);font-weight:700;">0</span> / 1 张</span>
+                <button class="glow-btn" id="btnConfirmCards" disabled>确认选牌</button>
             </div>
             <div class="group-tabs" id="groupTabs"></div>
             <div class="picker-grid" id="cardPickerGrid"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="glow-btn" id="btnConfirmCards" disabled>确认选牌</button>
         </div>
     </div>
 </div>
