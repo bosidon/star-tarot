@@ -232,18 +232,30 @@ var DrawPage = {
       var dx = sr.left + sr.width / 2 - cx;
       var dy = sr.top + sr.height / 2 - cy;
       
-      // 冻结：位置固定，104x195
-      el.style.cssText = 'position:fixed;left:' + (cx - 52) + 'px;top:' + (cy - 97.5) + 'px;' +
-        'width:104px;height:195px;margin:0;border-radius:8px;z-index:99999;' +
+      // 冻结：固定在当前位置（保持当前尺寸和旋转）
+      var curW = cr.width;
+      var curH = cr.height;
+      el.style.cssText = 'position:fixed;left:' + (cx - curW/2) + 'px;top:' + (cy - curH/2) + 'px;' +
+        'width:' + curW + 'px;height:' + curH + 'px;margin:0;border-radius:8px;z-index:99999;' +
         'box-shadow:0 0 20px var(--gold);' +
-        'transform:translate(0,0);transition:none;pointer-events:none';
+        'pointer-events:none';
       
-      // 3秒直线飞行（尺寸不变，不偏转）
+      // 1s 逐渐切换到飞行状态（放大到 104x195 + 摆正）
       void el.offsetHeight;
-      el.style.transition = 'transform 3s linear';
-      el.style.setProperty('transform', 'translate(' + dx + 'px,' + dy + 'px)', 'important');
+      el.style.transition = 'all 1s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      el.style.width = '104px';
+      el.style.height = '195px';
+      el.style.left = (cx - 52) + 'px';
+      el.style.top = (cy - 97.5) + 'px';
+      el.style.transform = 'none';
       
-      // 到达后：飞行元素直接入槽，逆位状态自然保留
+      // 1s 后：3s 直线飞向槽位
+      setTimeout(function() {
+        el.style.transition = 'transform 3s linear';
+        el.style.setProperty('transform', 'translate(' + dx + 'px,' + dy + 'px)', 'important');
+      }, 1000);
+      
+      // 到达后（1s 摆正 + 3s 飞行 = 4s）：直接入槽
       setTimeout(function() {
         // 覆盖 .fan-card 的 absolute/80x150，让牌填满槽位
         el.style.position = 'relative';
@@ -266,7 +278,7 @@ var DrawPage = {
         slot.appendChild(el);
 
         self.drawnCards.push(card);
-      }, 3000);
+      }, 4000);
     }, 1000);
   }
 };
