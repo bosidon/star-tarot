@@ -243,12 +243,29 @@ var DrawPage = {
       el.style.transition = 'transform 3s linear';
       el.style.setProperty('transform', 'translate(' + dx + 'px,' + dy + 'px)', 'important');
       
-      // 到达后：卡已在槽位，直接填槽，不需过渡
+      // 到达后：飞行元素直接入槽，逆位状态自然保留
       setTimeout(function() {
+        // 覆盖 .fan-card 的 absolute/80x150，让牌填满槽位
+        el.style.position = 'relative';
+        el.style.width = '100%';
+        el.style.height = '100%';
+        el.style.left = 'auto';
+        el.style.top = 'auto';
+        el.style.margin = '0';
+        el.style.transform = 'none';
+        el.style.transition = 'none';
+        el.style.boxShadow = 'none';
+        el.style.zIndex = 'auto';
+        el.style.borderRadius = '0';
+        el.style.pointerEvents = 'auto';
+        // 移除飞行类，保留 .flipped 确保牌面朝外
+        el.classList.remove('flipping', 'hovered');
+
         slot.className = 'drawn-card';
-        slot.innerHTML = '<img src="' + imgSrc + '">';
+        slot.innerHTML = '';
+        slot.appendChild(el);
+
         self.drawnCards.push(card);
-        el.remove();
       }, 3000);
     }, 1000);
   }
