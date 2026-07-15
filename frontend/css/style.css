@@ -166,6 +166,61 @@ header p {
 }
 
 
+
+
+/* ============ 仪式步骤引导 ============ */
+.ritual-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(124,58,237,0.25));
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+}
+
+.step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-title {
+  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 14px;
+}
+
+.step-line {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(201,168,76,0.4), rgba(124,58,237,0.2));
+  margin: 6px 0 6px 17px;
+}
+
+/* 牌位标签加强 */
+.card-position-label {
+  font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-align: center;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+}
 .questioner-row {
     display: flex;
     align-items: center;
