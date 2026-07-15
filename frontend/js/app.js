@@ -220,7 +220,7 @@ const TarotApp = {
             <div class="picker-symbol">${ARCANA_SYMBOLS[card.arcana] || '🃏'}</div>
           </div>
           <div class="picker-name">${card.name}</div>
-          <div class="picker-num">No.${card.number}</div>
+          
           ${isSelected ? `<div class="picker-badge">${isRev ? '逆位' : '正位'}</div>` : ''}
         </div>
       `;
