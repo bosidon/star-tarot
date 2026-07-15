@@ -302,6 +302,7 @@ header p {
   display: flex;
   gap: 16px;
   margin-top: 20px;
+  flex-wrap: nowrap;
 }
 
 .draw-btn {
