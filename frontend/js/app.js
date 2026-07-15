@@ -234,7 +234,8 @@ const TarotApp = {
   toggleCard(cardId) {
     const idx = this.drawnCards.findIndex(c => c.id === cardId);
     if (idx !== -1) {
-      this.drawnCards[idx].reversed = !this.drawnCards[idx].reversed;
+      this.drawnCards.splice(idx, 1);
+      this.selectedCardsCount--;
       this.renderGroup(this.currentGroup);
       this.updatePickerStatus();
     }
