@@ -141,9 +141,7 @@ const TarotApp = {
       });
     });
 
-    const si = document.getElementById('cardSearchInput'); if (si) si.addEventListener('input', (e) => this.filterGroupCards(e.target.value));
-
-    // 点击弹窗外关闭
+        // 点击弹窗外关闭
     document.getElementById('cardPickerModal').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) this.closeCardPicker();
     });
@@ -200,8 +198,7 @@ const TarotApp = {
     this.currentGroup = key;
     document.querySelectorAll('.group-tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`.group-tab[data-group="${key}"]`).classList.add('active');
-    const si2 = document.getElementById('cardSearchInput'); if (si2) si2.value = '';
-    this.renderGroup(key);
+        this.renderGroup(key);
   },
 
   renderGroup(key) {
@@ -230,20 +227,6 @@ const TarotApp = {
     }).join('');
   },
 
-  filterGroupCards(query) {
-    const cards = this.allCardsData.filter(CARD_GROUPS.find(g => g.key === this.currentGroup).filter);
-    const q = query.toLowerCase();
-
-    const grid = document.getElementById('cardPickerGrid');
-    const items = grid.querySelectorAll('.picker-card');
-    items.forEach(el => {
-      const id = parseInt(el.dataset.id);
-      const card = cards.find(c => c.id === id);
-      if (!card) return;
-      const match = card.name.toLowerCase().includes(q);
-      el.style.display = match ? '' : 'none';
-    });
-  },
 
   // ============ 选牌交互 ============
   toggleCard(cardId) {
