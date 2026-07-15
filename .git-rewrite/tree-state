@@ -1,0 +1,14 @@
+.gitignore
+backend/cards.json
+backend/package-lock.json
+backend/package.json
+backend/server.js
+ecosystem.config.js
+frontend/css/draw.css
+frontend/css/style.css
+frontend/draw.html
+frontend/images/draw-bg.jpg
+frontend/img/hero-bg.jpg
+frontend/index.html
+frontend/js/app.js
+frontend/js/draw.js
