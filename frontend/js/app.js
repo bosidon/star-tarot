@@ -220,7 +220,10 @@ const TarotApp = {
             <div class="picker-symbol">${ARCANA_SYMBOLS[card.arcana] || '🃏'}</div>
           </div>
           <div class="picker-name">${card.name}</div>
-          
+          <div class="picker-hover">
+            <span class="picker-hover-btn" onclick="event.stopPropagation(); TarotApp.selectCard(${card.id}, false)">正</span>
+            <span class="picker-hover-btn reverse" onclick="event.stopPropagation(); TarotApp.selectCard(${card.id}, true)">逆</span>
+          </div>
         </div>
       `;
     }).join('');
@@ -229,12 +232,23 @@ const TarotApp = {
 
   // ============ 选牌交互 ============
   toggleCard(cardId) {
+    const idx = this.drawnCards.findIndex(c => c.id === cardId);
+    if (idx !== -1) {
+      // 已选中 → 取消选择
+      this.drawnCards.splice(idx, 1);
+      this.selectedCardsCount--;
+      this.renderGroup(this.currentGroup);
+      this.updatePickerStatus();
+    }
+  },
+
+  selectCard(cardId, reversed) {
     const maxCards = (this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single).count;
     const idx = this.drawnCards.findIndex(c => c.id === cardId);
 
     if (idx !== -1) {
       // 已选中 → 切换正逆位
-      this.drawnCards[idx].reversed = !this.drawnCards[idx].reversed;
+      this.drawnCards[idx].reversed = reversed;
       this.renderGroup(this.currentGroup);
       this.updatePickerStatus();
       return;
@@ -245,10 +259,9 @@ const TarotApp = {
       return;
     }
 
-    // 选新牌
     const card = this.allCardsData.find(c => c.id === cardId);
     if (card) {
-      this.drawnCards.push({ ...card, reversed: false });
+      this.drawnCards.push({ ...card, reversed });
       this.selectedCardsCount++;
       this.renderGroup(this.currentGroup);
       this.updatePickerStatus();

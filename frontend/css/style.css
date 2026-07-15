@@ -1298,6 +1298,51 @@ footer a {
   position: relative;
 }
 
+
+.picker-hover {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(10, 8, 30, 0.7);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  border-radius: var(--radius-md);
+  z-index: 2;
+}
+.picker-card:hover .picker-hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+.picker-hover-btn {
+  display: inline-block;
+  padding: 4px 16px;
+  background: rgba(212, 168, 83, 0.2);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 4px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.picker-hover-btn:hover {
+  background: var(--gold);
+  color: #0a081e;
+}
+.picker-hover-btn.reverse {
+  border-color: #f87171;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.15);
+}
+.picker-hover-btn.reverse:hover {
+  background: #f87171;
+  color: #fff;
+}
+
 .picker-card:hover {
   border-color: rgba(212, 168, 83, 0.3);
   background: rgba(212, 168, 83, 0.05);
