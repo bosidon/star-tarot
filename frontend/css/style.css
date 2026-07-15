@@ -1381,6 +1381,9 @@ footer a {
   .container { padding: 12px; }
   header h1 { font-size: 1.8rem; }
   .section-card { padding: 20px; }
+  .draw-methods { margin-top: 28px; }
+  .spread-selector { gap: 6px; }
+  .spread-option { padding: 6px 10px; font-size: 0.8rem; }
   .tarot-card { width: 140px; height: 220px; }
   .card-display { gap: 12px; }
   .picker-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
