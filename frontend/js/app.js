@@ -331,12 +331,12 @@ const TarotApp = {
   // ============ 显示卡牌 ============
   displayCards(cards) {
     const container = document.getElementById('cardDisplay');
-    const area = document.querySelector('.cards-area');
+    const area = document.querySelector('.draw-area');
     area.classList.add('visible');
     container.setAttribute('data-count', cards.length);
     
     // 更新标题为牌阵名称
-    var titleEl = area.querySelector('.section-title');
+    var titleEl = null; // section-title removed from step 3
     if (titleEl) {
       var config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
       titleEl.innerHTML = '🃏 ' + config.label;
@@ -816,7 +816,7 @@ const TarotApp = {
     this.currentQuestion = '';
     this._interpreting = false;
 
-    document.querySelector('.cards-area').classList.remove('visible');
+    document.querySelector('.draw-area').classList.remove('visible');
     document.querySelector('.interpretation-area').classList.remove('visible');
     document.getElementById('interpretationContent').innerHTML = '';
     document.querySelector('.interaction-bar').classList.remove('visible');

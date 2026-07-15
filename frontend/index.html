@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>塔罗解读 · 仙宝</title>
-    <link rel="stylesheet" href="css/style.css?v=28">
+    <link rel="stylesheet" href="css/style.css?v=36">
     <meta name="description" content="塔罗占卜解读 - 输入问题，让星辰智慧为你指引方向">
     <link rel="icon" type="image/x-icon" href="/assets/xianbao/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/xianbao/favicon-16.png">
@@ -68,11 +68,9 @@
 <div class="container" id="read">
 
 
-    <!-- 问题输入区 -->
+    <!-- 步骤①：写入问题 -->
     <div class="section-card question-area">
         <button class="history-btn" onclick="TarotApp.openHistory()" title="查看解读记录">📋 我的记录</button>
-
-        <!-- 步骤①：写下问题 -->
         <div class="ritual-step">
             <div class="step-num">①</div>
             <div class="step-body">
@@ -84,10 +82,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="step-line"></div>
-
-        <!-- 步骤②：选择牌阵 -->
+    <!-- 步骤②：选择牌阵 -->
+    <div class="section-card spread-area">
         <div class="ritual-step">
             <div class="step-num">②</div>
             <div class="step-body">
@@ -100,26 +98,29 @@
                 <div class="spread-option" data-spread="celtic">凯尔特十字</div>
             </div>
             <div id="spreadDescription" class="spread-description visible">最简洁的牌阵，适合日常小事或快速获取灵感指引。一张牌直击核心，为你揭示当下最需要关注的能量。</div>
-                <div class="draw-methods">
-            <button class="draw-btn draw-btn-simple" id="btnSelfDraw">
-                <span>已选好牌</span>
-            </button>
-            <button class="draw-btn draw-btn-simple" id="btnDrawMode" onclick="TarotApp.toggleDrawMode()">
-                <span>开始选牌</span>
-            </button>
-                </div>
+
             </div>
         </div>
-
     </div>
 
-    <!-- 卡牌展示区 -->
-    <div class="cards-area">
-        <div class="section-card">
-            <div class="section-title">🃏 塔罗牌局</div>
-            <div class="card-display" id="cardDisplay"></div>
-            <div class="interaction-bar">
-                <button class="glow-btn" id="btnInterpret">🔮 开始解读</button>
+    <!-- 步骤③：开始抽牌 -->
+    <div class="section-card draw-area">
+        <div class="ritual-step">
+            <div class="step-num">③</div>
+            <div class="step-body">
+                <div class="step-title">开始抽牌</div>
+                <div class="draw-methods">
+                    <button class="draw-btn draw-btn-simple" id="btnSelfDraw">
+                        <span>已选好牌</span>
+                    </button>
+                    <button class="draw-btn draw-btn-simple" id="btnDrawMode" onclick="TarotApp.toggleDrawMode()">
+                        <span>开始选牌</span>
+                    </button>
+                </div>
+                <div class="card-display" id="cardDisplay"></div>
+                <div class="interaction-bar">
+                    <button class="glow-btn" id="btnInterpret">🔮 开始解读</button>
+                </div>
             </div>
         </div>
     </div>
