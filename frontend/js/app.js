@@ -864,7 +864,7 @@ const TarotApp = {
 
   drawDeckAllCards: [],  // 所有78张牌的数据
   drawDeckPage: 0,      // 当前页码
-  drawDeckPerPage: 24,  // 每页24张
+  drawDeckPerPage: 26,  // 每页24张
 
   initDrawDeck() {
     const container = document.getElementById('drawDeck');
@@ -878,10 +878,7 @@ const TarotApp = {
     const maxCards = config.count;
     
     // 更新标题和状态
-    document.getElementById('drawDeckTitle').textContent = 
-      '🃏 点击翻开 ' + maxCards + ' 张牌（' + config.label + '）';
-    document.getElementById('drawDeckStatus').innerHTML = 
-      '已选 <span style="color:var(--gold);font-weight:700;">0</span> / ' + maxCards + ' 张';
+    document.getElementById('drawDeckTitle').textContent = config.label + '（0/' + maxCards + '）';
     
     // 创建78张牌，随机排列
     const deck = [...Array(78).keys()];
@@ -1003,8 +1000,7 @@ const TarotApp = {
     this.drawnCards.push(drawnCard);
     
     // 更新状态显示
-    document.getElementById('drawDeckStatus').innerHTML = 
-      '已选 <span style="color:var(--gold);font-weight:700;">' + this.drawDeckCards.length + '</span> / ' + maxCards + ' 张';
+    document.getElementById('drawDeckTitle').textContent = config.label + '（' + this.drawDeckCards.length + '/' + maxCards + '）';
     
     // 显示抽到的牌
     this.showDrawnCardInfo();

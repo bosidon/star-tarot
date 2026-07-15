@@ -388,15 +388,22 @@ header p {
   justify-content: center;
   flex: 0 0 auto !important;
   min-width: 120px;
+  animation: btnBreath 3s ease-in-out infinite;
 }
 .draw-btn-simple:hover {
   border-color: var(--gold);
   background: rgba(201,168,76,0.1);
   box-shadow: 0 0 24px rgba(201,168,76,0.12);
+  animation: none;
 }
 .draw-btn-simple::before {
   display: none;
 }
+@keyframes btnBreath {
+  0%, 100% { box-shadow: 0 0 6px rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.2); }
+  50% { box-shadow: 0 0 18px rgba(201,168,76,0.25); border-color: rgba(201,168,76,0.4); }
+}
+
 .draw-btn-compact {
   padding: 14px 20px !important;
   flex-direction: row !important;
@@ -963,7 +970,7 @@ header p {
 
 .spread-description.visible {
   opacity: 1;
-  max-height: 80px;
+  max-height: 120px;
 }
 
 /* ============ 用户交互 ============ */
