@@ -206,9 +206,9 @@ header p {
 
 .step-line {
   width: 1px;
-  height: 24px;
+  height: 16px;
   background: linear-gradient(to bottom, rgba(201,168,76,0.4), rgba(124,58,237,0.2));
-  margin: 6px 0 6px 17px;
+  margin: 2px 0 2px 17px;
 }
 
 /* 牌位标签加强 */
