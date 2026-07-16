@@ -538,50 +538,11 @@ const TarotApp = {
   },
 
   // 构建解读区牌卡摘要（缩略图+名称+正逆位+关键词pill）
-  buildCardsSummary() {
-    var self = this;
-    var html = '<div class="interp-cards">';
-    this.drawnCards.forEach(function(card, i) {
-      var config = self.SPREAD_CONFIG[self.currentSpread];
-      var pos = (config && config.positions[i]) || '牌' + (i + 1);
-      var status = card.reversed ? '逆位' : '正位';
-      var statusClass = card.reversed ? 'reversed' : 'upright';
-      var keywords = card.keywords ? card.keywords.split('、') : [];
-      var imgSrc = getCardImagePath(card) || '/assets/cards/card_back.jpg';
-      
-
-      html += '<div class="interp-card">';
-      html += '<div class="interp-card-img-wrap"><img class="interp-card-img" src="' + imgSrc + '" alt="' + self._esc(card.name) + '"></div>';
-      html += '<div class="interp-card-body">';
-      html += '<div class="interp-card-head">';
-      html += '<span class="interp-card-pos">' + self._esc(pos) + '</span>';
-      html += '</div>';
-      html += '<div class="interp-card-name-row">';
-      html += '<div class="interp-card-name">' + self._esc(card.name) + '</div>';
-      html += '<span class="interp-card-status ' + statusClass + '">' + status + '</span>';
-      html += '</div>';
-      if (keywords.length > 0) {
-        html += '<div class="interp-card-kw">';
-        keywords.slice(0, 4).forEach(function(kw) {
-          html += '<span class="kw-pill">' + self._esc(kw.trim()) + '</span>';
-        });
-        html += '</div>';
-      }
-      html += '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-    return html;
-  },
-
-  _esc: function(s) {
-    var div = document.createElement('div');
-    div.textContent = s || '';
     return div.innerHTML;
   },
 
   showInterpretation(text) {
-    this.showHtml(this.buildCardsSummary() + this.mdToHtml(text));
+    this.showHtml(this.mdToHtml(text));
   },
 
   // 直接渲染 HTML 内容到解读区（不经过 Markdown 转换）
