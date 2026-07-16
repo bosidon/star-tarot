@@ -220,6 +220,11 @@ const TarotApp = {
     if (this.drawnCards.length > 0) {
       this.displayCards(this.drawnCards);
       this.showInterpretButton();
+      // 定位到占卜区域
+      setTimeout(function() {
+        var area = document.querySelector('.draw-area');
+        if (area) area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
       this.showToast('✅ 已从扇形抽牌页带回 ' + this.drawnCards.length + ' 张牌');
     }
   },
