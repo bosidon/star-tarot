@@ -15,15 +15,6 @@ var DrawPage = {
     this.question = params.get('question') || '当下指引';
     this.questioner = params.get('questioner') || '';
 
-    // 更新界面
-    var spreadNames = {
-      single: '单张指引', three: '三张牌阵', horseshoe: '马蹄牌阵',
-      relationship: '关系牌阵', celtic: '凯尔特十字'
-    };
-    document.getElementById('spreadName').textContent = spreadNames[this.spread] || this.spread;
-    document.getElementById('maxCount').textContent = this.maxCount;
-    document.getElementById('headerProgress').textContent = '已选 0 / ' + this.maxCount + ' 张';
-
     // 根据牌数动态调整槽位
     this.adjustSlots();
 
@@ -84,7 +75,7 @@ var DrawPage = {
     var cardW = 80, cardH = 150;
     var cx = window.innerWidth / 2;
     var headerEl = document.querySelector(".draw-header");
-    var headerH = headerEl ? headerEl.offsetHeight : 56;
+    var headerH = headerEl ? headerEl.offsetHeight : 30;
     var barH = 250;
     var availMid = headerH + (window.innerHeight - headerH - barH) / 2;
     var outerR = isSmall ? 300 : 400;
@@ -312,7 +303,6 @@ var DrawPage = {
         slot.appendChild(el);
 
         // 更新进度
-        document.getElementById('headerProgress').textContent = '已选 ' + self.drawnCards.length + ' / ' + self.maxCount + ' 张';
 
         // 满额 → 显示完成按钮
         if (self.drawnCards.length >= self.maxCount) {

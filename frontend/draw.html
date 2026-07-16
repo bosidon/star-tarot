@@ -11,18 +11,15 @@
 .draw-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 8px;
   padding: 4px 16px;
   background: rgba(10,0,22,0.85);
   border-bottom: 1px solid rgba(212,168,83,0.15);
   position: relative;
   z-index: 100;
 }
-.draw-header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+
 .draw-back-btn {
   background: none;
   border: 1px solid rgba(212,168,83,0.3);
@@ -37,18 +34,7 @@
   background: rgba(212,168,83,0.12);
   border-color: var(--gold);
 }
-.draw-header-info {
-  color: rgba(240,244,255,0.8);
-  font-size: 0.82rem;
-}
-.draw-header-info strong {
-  color: var(--gold, #d4a853);
-}
-.draw-header-progress {
-  color: var(--gold, #d4a853);
-  font-size: 0.82rem;
-  font-weight: 600;
-}
+
 #drawCompleteBtn {
   padding: 4px 12px;
   border-radius: 4px;
@@ -74,12 +60,8 @@
 </head>
 <body class="draw-page">
   <div class="draw-header">
-    <div class="draw-header-left">
-      <button class="draw-back-btn" id="backBtn">← 返回</button>
-      <span class="draw-header-info" id="headerInfo">🃏 <strong id="spreadName"></strong></span>
-    </div>
-    <div class="draw-header-progress" id="headerProgress">已选 0 / <span id="maxCount"></span> 张</div>
-    <button id="drawCompleteBtn">✅ 完成抽牌，返回解读</button>
+    <button id="drawCompleteBtn">✅</button>
+    <button class="draw-back-btn" id="backBtn">❌</button>
   </div>
   <div id="fan-area">
     <div class="fan-row" id="fan-row-1"></div>
