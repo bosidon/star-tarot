@@ -141,14 +141,7 @@
                 <div class="interpretation-content" id="interpretationContent"></div>
                 <div id="interpretationActions" style="display:none; gap:12px; margin-top:24px; justify-content:center; flex-wrap:wrap;">
                     <button class="glow-btn" id="btnNewQuestion">🔄 重新提问</button>
-                    <div class="download-group">
-                        <button class="action-btn download-trigger">📥 下载</button>
-                        <div class="download-menu">
-                            <button onclick="TarotApp.downloadMd()">📄 Markdown (.md)</button>
-                            <button onclick="TarotApp.downloadTxt()">📝 纯文本 (.txt)</button>
-                            <button onclick="TarotApp.downloadPdf()">📕 PDF</button>
-                        </div>
-                    </div>
+                    <button class="action-btn" onclick="TarotApp.downloadPdf()">📥 下载 PDF</button>
                 </div>
             </div>
         </div>

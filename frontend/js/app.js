@@ -121,14 +121,6 @@ const TarotApp = {
     document.getElementById('btnNewQuestion').addEventListener('click', () => this.reset());
     document.getElementById('btnInterpret').addEventListener('click', () => this.getInterpretation());
 
-    // 下载菜单点击切换
-    document.querySelector('.download-trigger').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.querySelector('.download-menu').classList.toggle('open');
-    });
-    document.addEventListener('click', () => {
-      document.querySelector('.download-menu').classList.remove('open');
-    });
 
     document.querySelectorAll('.spread-option').forEach(el => {
       el.addEventListener('click', (e) => {
@@ -537,7 +529,9 @@ const TarotApp = {
     btn.disabled = false;
   },
 
-  // 构建解读区牌卡摘要（缩略图+名称+正逆位+关键词pill）
+  _esc: function(s) {
+    var div = document.createElement("div");
+    div.textContent = s || "";
     return div.innerHTML;
   },
 
@@ -589,14 +583,6 @@ const TarotApp = {
     return html;
   },
 
-  // ============ 下载 ============
-  downloadMd() {
-    this._download('md');
-  },
-
-  downloadTxt() {
-    this._download('txt');
-  },
 
   downloadPdf() {
     const content = document.getElementById('interpretationContent');
@@ -644,82 +630,6 @@ const TarotApp = {
 </body></html>`;
   },
 
-  _buildContent(format) {
-    const question = this.currentQuestion;
-    const cards = this.drawnCards;
-    const interpretation = this.mdToPlain(document.getElementById('interpretationContent').innerHTML);
-    const spreadName = (this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single).label;
-
-    if (format === 'md') {
-      let md = `# ✦ 星语塔罗 · 解读报告\n\n`;
-      md += `**提问人：** ${this.getQuestioner() || "匿名"}\n`;
-      md += `**问题：** ${question}\n`;
-      md += `**牌阵：** ${spreadName}\n\n`;
-      md += `## 抽到的牌\n`;
-      cards.forEach((c, i) => {
-        md += `${i+1}. **${c.name}**（${c.arcana}·${c.reversed ? '逆位' : '正位'}）\n`;
-      });
-      md += `\n---\n\n## 塔罗解读\n\n`;
-      md += interpretation;
-      md += `\n\n---\n*解读内容仅供参考*\n*https://tarot.xianbao.online*`;
-      return { content: md, ext: 'md', label: '解读报告' };
-    }
-
-    // TXT
-    let txt = `✦ 星语塔罗 · 解读报告 ✦\n`;
-    txt += `========================================\n\n`;
-    txt += `提问人：${this.getQuestioner() || "匿名"}\n`;
-    txt += `问题：${question}\n`;
-    txt += `牌阵：${spreadName}\n\n`;
-    txt += `── 抽到的牌 ──\n`;
-    cards.forEach((c, i) => {
-      txt += `  ${i+1}. ${c.name}（${c.arcana}·${c.reversed ? '逆位' : '正位'}）\n`;
-    });
-    txt += `\n── 塔罗解读 ──\n\n`;
-    txt += interpretation;
-    txt += `\n\n========================================\n`;
-    txt += `解读内容仅供参考\n`;
-    txt += `https://tarot.xianbao.online\n`;
-    return { content: txt, ext: 'txt', label: '解读报告' };
-  },
-
-  mdToPlain(html) {
-    let text = html
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/<\/h3>/gi, '\n')
-      .replace(/<\/h2>/gi, '\n')
-      .replace(/<\/h1>/gi, '\n')
-      .replace(/<\/strong>/gi, '')
-      .replace(/<strong>/gi, '')
-      .replace(/<\/em>/gi, '')
-      .replace(/<em>/gi, '')
-      .replace(/<\/code>/gi, '')
-      .replace(/<code>/gi, '')
-      .replace(/<hr\s*\/?>/gi, '\n---\n')
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/• /g, '- ')
-      .replace(/\n{3,}/g, '\n\n');
-    return text.trim();
-  },
-
-  _download(format) {
-    const { content, ext, label } = this._buildContent(format);
-    const now = new Date();
-    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `星语塔罗_${ts}.${ext}`;
-    a.click();
-    URL.revokeObjectURL(url);
-  },
-
-  // ============ 工具 ============
   showLoading(msg) {
     document.querySelector('#loadingOverlay .loading-text').textContent = msg || '加载中...';
     document.getElementById('loadingOverlay').classList.add('visible');
