@@ -3,6 +3,7 @@ var DrawPage = {
   allCards: [],
   drawnCards: [],
   maxCount: 3,       // 牌阵所需牌数
+  _animatingCount: 0,  // 正在动画中的牌数
   spread: 'three',    // 牌阵类型
   question: '',
   questioner: '',
@@ -231,9 +232,10 @@ var DrawPage = {
 
   pickCard: function(card, el) {
     if (!card || card._dimmed) return;
-    if (this.drawnCards.length >= this.maxCount) return;
+    if (this.drawnCards.length + this._animatingCount >= this.maxCount) return;
 
     card._dimmed = true;
+    this._animatingCount++;
 
     var self = this;
 
@@ -306,6 +308,7 @@ var DrawPage = {
         slot.appendChild(el);
 
         self.drawnCards.push(card);
+        self._animatingCount--;
 
         // 更新进度
         document.getElementById('headerProgress').textContent = '已选 ' + self.drawnCards.length + ' / ' + self.maxCount + ' 张';
