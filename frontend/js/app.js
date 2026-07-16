@@ -96,6 +96,8 @@ const TarotApp = {
     this.bindEvents();
     this.updateSpreadDescription();
     this.loadCards();
+    // 检测是否从 draw.html 返回
+    this.checkDrawSession();
   },
 
   loadCards() {
@@ -106,6 +108,8 @@ const TarotApp = {
           this.allCardsData = data.data;
           this.buildGroupTabs();
           this.renderGroup('major');
+          // 牌数据加载完成后检查 draw.html 返回的抽牌会话
+          this.processDrawSession();
         }
       })
       .catch(() => {});
@@ -172,6 +176,52 @@ const TarotApp = {
   syncQuestion() {
     this.currentQuestion = this.getQuestion();
     return this.currentQuestion;
+  },
+
+  checkDrawSession() {
+    try {
+      var raw = localStorage.getItem('tarotDrawSession');
+      if (!raw) return false;
+      var session = JSON.parse(raw);
+      return session;
+    } catch(e) {
+      localStorage.removeItem('tarotDrawSession');
+      return false;
+    }
+  },
+
+  processDrawSession() {
+    var session = this.checkDrawSession();
+    if (!session) return;
+    // 清除会话，防止刷新重复触发
+    localStorage.removeItem('tarotDrawSession');
+    
+    // 恢复牌阵
+    this.currentSpread = session.spread;
+    this.currentQuestion = session.question || '当下指引';
+    if (session.questioner) {
+      document.getElementById('questionerInput').value = session.questioner;
+    }
+    this.updateSpreadDescription();
+    
+    // 映射牌数据：用序号匹配 allCardsData
+    var self = this;
+    this.drawnCards = [];
+    session.cards.forEach(function(c) {
+      // 按 name 和 number 查找
+      var found = self.allCardsData.find(function(ac) {
+        return ac.number === c.number && ac.arcana === c.arcana;
+      });
+      if (found) {
+        self.drawnCards.push({ ...found, reversed: c.isReversed || c.reversed || false });
+      }
+    });
+    
+    if (this.drawnCards.length > 0) {
+      this.displayCards(this.drawnCards);
+      this.showInterpretButton();
+      this.showToast('✅ 已从扇形抽牌页带回 ' + this.drawnCards.length + ' 张牌');
+    }
   },
 
   shakeElement(el) {
@@ -854,6 +904,16 @@ const TarotApp = {
     const question = this.syncQuestion();
     if (!question) return;
     
+    // 桌面端（>768px）→ 扇形抽牌页
+    if (window.innerWidth > 768) {
+      const config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
+      const q = encodeURIComponent(this.currentQuestion);
+      const questioner = encodeURIComponent(document.getElementById('questionerInput').value.trim() || '');
+      window.location.href = 'draw.html?spread=' + this.currentSpread + '&count=' + config.count + '&question=' + q + '&questioner=' + questioner;
+      return;
+    }
+    
+    // 移动端 → 现有弹窗
     this.drawMode = true;
     this.drawnCards = [];
     this.drawDeckCards = [];
