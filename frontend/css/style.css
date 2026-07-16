@@ -1536,24 +1536,14 @@ footer a {
 }
 
 /* 正逆位浮标 - 在图片区内底部 */
-.card-overlay {
-  position: absolute;
-  bottom: 8px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
-}
-
 .card-position {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 4px 16px;
-  border-radius: 20px;
+  padding: 2px 12px;
+  border-radius: 12px;
   letter-spacing: 2px;
-  backdrop-filter: blur(6px);
+  display: inline-block;
+  margin-bottom: 4px;
 }
 
 .card-position.pos-upright {
