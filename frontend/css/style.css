@@ -1542,8 +1542,7 @@ footer a {
   padding: 2px 12px;
   border-radius: 12px;
   letter-spacing: 2px;
-  display: inline-block;
-  margin-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .card-position.pos-upright {
@@ -1565,12 +1564,19 @@ footer a {
   text-align: center;
 }
 
+.card-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
 .card-name {
   font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--gold-light);
-  margin-bottom: 3px;
 }
 
 .card-suit {
