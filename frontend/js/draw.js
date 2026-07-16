@@ -83,7 +83,12 @@ var DrawPage = {
 
     var cardW = 80, cardH = 150;
     var cx = window.innerWidth / 2;
-    var cy = isSmall ? 350 : 500;
+    var headerEl = document.querySelector(".draw-header");
+    var headerH = headerEl ? headerEl.offsetHeight : 56;
+    var barH = 250;
+    var availMid = headerH + (window.innerHeight - headerH - barH) / 2;
+    var outerR = isSmall ? 300 : 400;
+    var cy = availMid + outerR * 0.5;
 
     var cardIdx = 0;
     arcs.forEach(function(arc) {
