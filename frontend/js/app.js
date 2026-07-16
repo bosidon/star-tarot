@@ -448,7 +448,7 @@ const TarotApp = {
                   <div class="card-name">${card.name}</div>
                   <div class="card-position ${posClass}">${posText}</div>
                 </div>
-                <div class="card-suit">${suitLabel}</div>
+
                 <div class="card-keywords">${card.keywords ? card.keywords.split('、').slice(0, 3).join(' · ') : ''}</div>
             </div>
           </div>
