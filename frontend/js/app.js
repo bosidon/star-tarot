@@ -781,12 +781,9 @@ const TarotApp = {
     const question = this.syncQuestion();
     if (!question) return;
     
-    // 桌面端（>768px）→ 扇形抽牌页
+    // 桌面端（>768px）→ iframe 弹窗
     if (window.innerWidth > 768) {
-      const config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
-      const q = encodeURIComponent(this.currentQuestion);
-      const questioner = encodeURIComponent(document.getElementById('questionerInput').value.trim() || '');
-      window.location.href = 'draw.html?spread=' + this.currentSpread + '&count=' + config.count + '&question=' + q + '&questioner=' + questioner;
+      this.startFanDraw();
       return;
     }
     
@@ -1047,7 +1044,74 @@ const TarotApp = {
     win.focus();
     win.document.title = title + '_' + ts;
     setTimeout(() => win.print(), 500);
-  }
+  },
+
+  // ============ 扇形抽牌 iframe 弹窗 ============
+  _fanStorageHandler: null,
+
+  startFanDraw() {
+    var config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
+    var params = new URLSearchParams();
+    params.set('spread', this.currentSpread);
+    params.set('count', config.count);
+    params.set('question', this.currentQuestion);
+    var questioner = document.getElementById('questionerInput').value.trim();
+    if (questioner) params.set('questioner', questioner);
+
+    var iframe = document.getElementById('drawFrame');
+    iframe.src = 'draw.html?' + params.toString();
+
+    document.getElementById('drawFanModal').classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    var self = this;
+
+    // 监听 iframe 写入 localStorage 完成抽牌
+    this._fanStorageHandler = function(e) {
+      if (e.key === 'tarotDrawSession') {
+        window.removeEventListener('storage', self._fanStorageHandler);
+        self._fanStorageHandler = null;
+        self.closeFanDraw();
+        // 延迟等数据加载
+        setTimeout(function() { self.processDrawSession(); }, 200);
+      }
+    };
+    window.addEventListener('storage', this._fanStorageHandler);
+
+    // 检测 iframe 导航（❌取消或导航回 index.html）
+    iframe.onload = function() {
+      try {
+        var url = iframe.contentWindow.location.href;
+        if (url.indexOf('index.html') >= 0) {
+          if (self._fanStorageHandler) {
+            window.removeEventListener('storage', self._fanStorageHandler);
+            self._fanStorageHandler = null;
+          }
+          self.closeFanDraw();
+        }
+      } catch(e) {}
+    };
+
+    // 弹窗 ❌ 按钮
+    document.getElementById('fanBackBtn').onclick = function() {
+      if (self._fanStorageHandler) {
+        window.removeEventListener('storage', self._fanStorageHandler);
+        self._fanStorageHandler = null;
+      }
+      self.closeFanDraw();
+    };
+  },
+
+  closeFanDraw() {
+    document.getElementById('drawFanModal').classList.remove('visible');
+    document.body.style.overflow = '';
+    if (this._fanStorageHandler) {
+      window.removeEventListener('storage', this._fanStorageHandler);
+      this._fanStorageHandler = null;
+    }
+    var iframe = document.getElementById('drawFrame');
+    if (iframe) iframe.src = 'about:blank';
+  },
 };
 
 document.addEventListener('DOMContentLoaded', () => TarotApp.init());

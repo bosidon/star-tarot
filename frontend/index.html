@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>星语塔罗</title>
-    <link rel="stylesheet" href="css/style.css?v=53">
+    <link rel="stylesheet" href="css/style.css?v=54">
     <meta name="description" content="塔罗占卜解读 - 输入问题，让星辰智慧为你指引方向">
     <link rel="icon" type="image/x-icon" href="/assets/xianbao/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/xianbao/favicon-16.png">
@@ -97,7 +97,7 @@
                 <div class="spread-option" data-spread="three">三张牌阵</div>
                 <div class="spread-option" data-spread="horseshoe">马蹍牌阵</div>
                 <div class="spread-option" data-spread="relationship">关系牌阵</div>
-                <div class="spread-option" data-spread="celtic">凯尔特十字</div>
+                <!-- <div class="spread-option" data-spread="celtic">凯尔特十字</div> -->
             </div>
             <div id="spreadDescription" class="spread-description visible">最简洁的牌阵，适合日常小事或快速获取灵感指引。一张牌直击核心，为你揭示当下最需要关注的能量。</div>
 
@@ -176,6 +176,17 @@
     </div>
 </div>
 
+<!-- 扇形抽牌弹窗（桌面端 iframe）-->
+<div class="fan-modal-overlay" id="drawFanModal">
+  <div class="fan-modal-page">
+    <div class="fan-modal-header">
+      <button id="fanBackBtn">❌</button>
+    </div>
+    <iframe id="drawFrame" class="fan-iframe"></iframe>
+  </div>
+</div>
+
+
 <!-- 选牌弹窗 -->
 <div class="modal-overlay" id="cardPickerModal">
     <div class="modal-box">
@@ -237,6 +248,6 @@
 
 <script src="/assets/xianbao/auth-widget.js"></script>
 <script src="/assets/xianbao/xianbao-topbar.js"></script>
-<script src="js/app.js?v=18"></script>
+<script src="js/app.js?v=19"></script>
 </body>
 </html>

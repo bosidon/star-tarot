@@ -22,18 +22,9 @@ var DrawPage = {
     this.buildArcs();
     this.initHoverDetection();
 
-    // 返回按钮
-    document.getElementById('backBtn').addEventListener('click', function() {
-      if (DrawPage.drawnCards.length > 0) {
-        if (!confirm('返回将丢失已选牌，确定吗？')) return;
-      }
-      window.location.href = 'index.html';
-    });
 
-    // 完成抽牌按钮
-    document.getElementById('drawCompleteBtn').addEventListener('click', function() {
-      DrawPage.completeDrawing();
-    });
+
+
   },
 
   adjustSlots() {
@@ -66,10 +57,9 @@ var DrawPage = {
     var self = this;
     var container = document.getElementById('fan-row-1');
     // 根据视口宽度调整扇形半径
-    var isSmall = window.innerWidth < 1200;
     var arcs = [
-      { radius: isSmall ? 300 : 400, count: 52, startIdx: 0 },
-      { radius: isSmall ? 150 : 200, count: 26, startIdx: 52 }
+      { radius: 400, count: 52, startIdx: 0 },
+      { radius: 200, count: 26, startIdx: 52 }
     ];
 
     var cardW = 80, cardH = 150;
@@ -78,8 +68,7 @@ var DrawPage = {
     var headerH = headerEl ? headerEl.offsetHeight : 30;
     var barH = 250;
     var availMid = headerH + (window.innerHeight - headerH - barH) / 2;
-    var outerR = isSmall ? 300 : 400;
-    var cy = availMid + outerR * 0.5;
+    var cy = availMid + 200;
 
     var cardIdx = 0;
     arcs.forEach(function(arc) {
@@ -304,9 +293,9 @@ var DrawPage = {
 
         // 更新进度
 
-        // 满额 → 显示完成按钮
+        // 满额 → 自动完成
         if (self.drawnCards.length >= self.maxCount) {
-          document.getElementById('drawCompleteBtn').classList.add('visible');
+          setTimeout(function() { self.completeDrawing(); }, 500);
         }
       }, 4000);
     }, 1000);
