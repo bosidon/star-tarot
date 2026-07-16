@@ -430,8 +430,9 @@ const TarotApp = {
       const posClass = card.reversed ? 'pos-reversed' : 'pos-upright';
       const posText = card.reversed ? '逆位' : '正位';
 
+      var cardClass = 'tarot-card flipped' + (card.reversed ? ' pos-reversed' : '');
       return `
-        <div class="tarot-card flipped">
+        <div class="${cardClass}">
           <div class="card-inner">
             <div class="card-back">
               <img src="/assets/cards/card_back.jpg" alt="牌背面">
