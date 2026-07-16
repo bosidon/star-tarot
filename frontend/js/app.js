@@ -548,18 +548,18 @@ const TarotApp = {
       var statusClass = card.reversed ? 'reversed' : 'upright';
       var keywords = card.keywords ? card.keywords.split('、') : [];
       var imgSrc = getCardImagePath(card) || '/assets/cards/card_back.jpg';
-      var suitMap = { '大阿卡纳': 'MAJOR', '小阿卡纳—权杖': 'WANDS', '小阿卡纳—圣杯': 'CUPS', '小阿卡纳—宝剑': 'SWORDS', '小阿卡纳—星币': 'PENTACLES' };
-      var suit = suitMap[card.arcana] || '';
+      
 
       html += '<div class="interp-card">';
       html += '<div class="interp-card-img-wrap"><img class="interp-card-img" src="' + imgSrc + '" alt="' + self._esc(card.name) + '"></div>';
       html += '<div class="interp-card-body">';
       html += '<div class="interp-card-head">';
       html += '<span class="interp-card-pos">' + self._esc(pos) + '</span>';
+      html += '</div>';
+      html += '<div class="interp-card-name-row">';
+      html += '<div class="interp-card-name">' + self._esc(card.name) + '</div>';
       html += '<span class="interp-card-status ' + statusClass + '">' + status + '</span>';
       html += '</div>';
-      html += '<div class="interp-card-name">' + self._esc(card.name) + '</div>';
-      html += '<div class="interp-card-suit">' + suit + '</div>';
       if (keywords.length > 0) {
         html += '<div class="interp-card-kw">';
         keywords.slice(0, 4).forEach(function(kw) {

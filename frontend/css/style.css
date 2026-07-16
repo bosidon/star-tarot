@@ -864,18 +864,17 @@ header p {
   border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
+.interp-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .interp-card-name {
   font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--gold-light);
-}
-
-.interp-card-suit {
-  font-size: 0.82rem;
-  color: rgba(201, 168, 76, 0.45);
-  letter-spacing: 2px;
-  text-transform: uppercase;
 }
 
 .interp-card-kw {
