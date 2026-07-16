@@ -227,7 +227,7 @@ header p {
 .steps-header {
   text-align: center;
   font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--gold-light);
   margin-bottom: 14px;
@@ -1221,7 +1221,7 @@ footer a {
 .modal-header h3 {
   font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
   color: var(--gold);
-  font-size: 1.15rem;
+  font-size: 1.4rem;
 }
 
 .modal-close {
