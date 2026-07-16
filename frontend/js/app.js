@@ -771,6 +771,10 @@ const TarotApp = {
     btn.style.display = '';
     btn.classList.remove('loading');
     btn.disabled = false;
+
+    // 滚动到占卜流程区
+    const readEl = document.getElementById("read");
+    if (readEl) readEl.scrollIntoView({ behavior: "smooth", block: "start" });
   },
 
   // ============ 线上抽牌模式 ============
