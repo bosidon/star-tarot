@@ -34,6 +34,11 @@ var DrawPage = {
     slots.forEach(function(s, i) {
       s.style.display = (i < DrawPage.maxCount) ? '' : 'none';
     });
+    if (DrawPage.maxCount > 6) {
+      scroll.classList.add('many-cards');
+    } else {
+      scroll.classList.remove('many-cards');
+    }
   },
 
   async loadCards() {
@@ -67,8 +72,7 @@ var DrawPage = {
     var headerEl = document.querySelector(".draw-header");
     var headerH = headerEl ? headerEl.offsetHeight : 30;
     var barH = 250;
-    var availMid = headerH + (window.innerHeight - headerH - barH) / 2;
-    var cy = availMid + 200;
+    var cy = headerH + 400;
 
     var cardIdx = 0;
     arcs.forEach(function(arc) {

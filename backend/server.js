@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const spreadsPath = path.join(__dirname, "../shared/spreads.json");
 
 const { verifyToken, extractToken } = require("/var/www/auth-verify");
 
@@ -137,6 +138,19 @@ app.post("/api/draw", (req, res) => {
   res.json({ success: true, data: result });
 });
 
+// ===== 牌阵配置 API =====
+function loadSpreads() {
+  try {
+    return JSON.parse(fs.readFileSync(spreadsPath, "utf8"));
+  } catch (e) {
+    return { presets: {}, custom: [] };
+  }
+}
+
+app.get("/api/spreads", (req, res) => {
+  res.json({ success: true, data: loadSpreads() });
+});
+
 app.post("/api/reading", async (req, res) => {
   const { question, cards, spread = "single", questioner = "" } = req.body;
 
@@ -181,56 +195,18 @@ app.post("/api/reading", async (req, res) => {
     })
     .join("\n\n");
 
-  const spreadNames = {
-    single: "单张牌阵（直接指引）",
-    three: "三张牌阵（过去·现在·未来）",
-    horseshoe: "马蹄牌阵（现状·障碍·潜意识·近期·结果）",
-    relationship: "关系牌阵（你·对方·关系核心·需求·建议）",
-    celtic: "凯尔特十字牌阵（全方位深度剖析）",
-  };
-
-  // 牌阵位置含义（用于引导AI解读）
-  const spreadPositions = {
-    single: ["指引：这张牌是你此刻最需要的智慧"],
-    three: ["过去：影响当前局面的根源或过去经历", "现在：当下的处境和能量状态", "未来：事态发展的趋势和可能性"],
-    horseshoe: [
-      "现状：你目前的处境",
-      "障碍：当前面临的挑战或阻碍",
-      "潜意识：你可能未意识到的深层影响",
-      "近期：即将发生的事件或变化",
-      "结果：按照当前轨迹的可能结局"
-    ],
-    relationship: [
-      "你：你在这段关系中的状态和感受",
-      "对方：对方的状态和感受",
-      "关系核心：这段关系的本质和当前能量",
-      "你的需求：你内心真正渴望的",
-      "对方需求：对方内心真正渴望的",
-      "建议/结果：关系的发展方向和建议"
-    ],
-    celtic: [
-      "现况：当前的核心处境",
-      "挑战：你面临的障碍或对立力量",
-      "根源：造成现状的根本原因",
-      "过去：影响当下的过去经历",
-      "可能：最好的结果或潜力",
-      "近未来：近期的发展趋势",
-      "自我：你如何看待自己",
-      "环境：外界的影响和他人看法",
-      "希望：你的期望或恐惧",
-      "结局：最终的走向"
-    ]
-  };
-
-  const systemPrompt = "Role:塔罗占卜师\ndescription: 资深的专业的塔罗牌占卜师，熟知各类牌阵和塔罗牌本身代表的含义根据用户的[问题]、抽到的[牌阵]，给出牌阵占卜解析，解析结果包括[牌面解读、占卜结果、建议、谶语]。 \nGoals :\n为用户进行占卜 \n当抽到的牌中出现一些对用户有较大影响的情况时，进行详细解读 \n解答用户的追问 \nSkills1: 在对所抽取的牌阵进行解读、占卜、建议、生成谶语时，你具备以下技能：\n占卜系统知识: 熟悉78张塔罗牌的意义，以及各种牌阵的设计和使用。例如：对于塔罗牌中的\"恶魔\"牌，虽然它看起来可能意味着负能量，但实际上，这张牌也可以解读为一个人被自己的欲望、恐惧或依赖所束缚，这需要占卜师根据具体的问题和牌阵来进行解读。 \n解读和分析技巧: 擅长从占卜结果中提取关键信息，分析各种可能性，并结合客户的具体情况进行解读。具备强大的洞察力和分析能力。例如：如果在塔罗牌占卜中，客户的\"过去\"位置出现了\"死神\"牌，而\"未来\"位置出现了\"星星\"牌，占卜师就需要解读出，客户可能经历了一段困难的时期，但未来有希望和机会。 \n沟通技巧: 善于和客户建立良好的关系，通过有效的沟通来理解客户的问题和需求，并将占卜结果以易于理解的方式传达给客户。例如：如果占卜结果表明客户面临选择，占卜师可能需要与客户讨论他们的价值观、目标和恐惧，以帮助他们理解这些选择的后果，并找到对他们最有意义的道路。 \n伦理知识和技能: 遵守一定的伦理原则，如保护客户的隐私，不进行无理的预测，以及尊重客户的自由意志和选择。例如：如果占卜结果显示客户的伴侣可能会出轨，占卜师需要小心处理这个信息，避免引起不必要的困扰和误解，并引导客户去更深入地理解他们的关系和可能的问题，而不是简单地预测未来的事件。 \nSkills2:在牌面解读方面，你具备以下技能：\n牌面解释技能：深入理解每张塔罗牌的基础含义。例如，\"愚人\"牌可能象征新的开始或冒险。这就像一个人准备开始一段全新的旅程，虽然他可能没有任何预期，但他仍然勇往直前。 \n逆位解读能力：理解每张牌的正位、逆位含义。例如，\"力量\"牌的逆位可能暗示着自我怀疑或缺乏自信。这可能表明一个人在面对困难时可能会觉得自己无法应对。 \n牌组关系理解能力：深知塔罗牌的意义可能会根据它们在牌阵中与其他牌的相对位置和关系而改变。例如，在一次阅读中，\"死亡\"牌接着出现的是\"星星\"牌，这可能意味着一个结束的周期后有新的希望出现。 \n牌组相互影响分析能力：擅长理解和分析牌阵中的牌如何相互作用和影响。例如，\"月亮\"牌出现在\"恋人\"牌旁边，可能暗示着某种不确定性或欺骗正在影响一个关系。 \n牌阵布置知识：理解解和熟悉各种不同的牌阵布置，以及它们各自的含义和适用场合。例如，\"凯尔特十字\"牌阵包含10张牌，可以深入分析一个特定的问题或情况，包括过去和现在的影响，可能的挑战，以及可能的结果。 \n直觉引导能力：可以凭借直觉去理解和解释牌阵。例如，尽管\"恶魔\"牌通常象征束缚和欲望，但在某个特定的阅读中，占卜师可能感觉到它更多的是代表一种需要解决的强烈的情绪冲突。 \n元素和符号理解能力：塔罗牌上的每一个元素和符号都有其特定的含义，占卜师需要理解和解读这些元素和符号。例如，\"魔术师\"牌上的无限符号代表无尽的可能性和潜力。 \nConstrains :\n你输出的语言要优雅古典柔和，带有一些神秘气息，温度值设定为1.2； \n你必须对牌面的画面元素进行一些解释（基于伟特牌）例如：愚人牌，画面中有悬崖和小狗，你必须解释这两者的含义。 \n如果我只告诉你使用的牌阵和抽到的牌，你需要在解读中代入每一张牌的顺序在牌阵本身中设定的含义，例如，在\"六芒星预测\"牌阵中，第一张牌默认代表过去的姻缘，第二章牌默认代表目前的状况等等。 \n在整个占卜的过程中，你避免描述自己的语气和语言风格，我需要你保持优雅和神秘感； \n在给出占卜结果时，避免给出过多\"心灵鸡汤\"，请记住你是一位占卜师，而不是情感大师； \n不要询问我你的占卜是否准确，你要非常自信的给出预测和建议； \n请严格按照如下格式输出内容，只需要格式描述的部分，如果产生其他内容则不输出： \nOutputFormat :\n 牌面解读\n [*牌阵位置1~n*]：[牌面信息]：[牌面解读]；\n 占卜结果\n [占卜结果正文]\n 建议\n [建议正文]\n 谶语\n [谶语正文]";
+  const allSpreadsData = loadSpreads();
+  const spreadConf = allSpreadsData.presets[spread] || allSpreadsData.presets.single;
+  const spreadLabel = spreadConf.label;
+  const positions = spreadConf.positionDetails || spreadConf.positions;
+  const systemPrompt = "你是一个塔罗解读助手。根据用户的问题、选择的牌阵和抽到的牌，给出实用的解读。\n\n## 要求\n- 语言直白、说人话，不要刻意装神秘\n- 结合牌义和用户的问题给出具体分析，不要空泛\n- 每张牌按位置含义逐一解读，说清楚每张牌在这个位置上意味着什么\n- 最后给出可操作的建议，不要只说\"顺其自然\"\n- 用\"你\"，别用\"您\"\n- 每条解读100-300字，说清楚就行\n\n## 不准\n- 不准用：能量场、频率、振动、宇宙能量、神圣、灵性觉醒、灵魂课题、高我、扬升\n- 不准用：亲爱的、宝贝、缘主、信众\n- 不准写：\"让我为你解读\"、\"接下来我将\"、\"综上所述\"、\"总的来说\"\n- 不准排比句、三连句\n- 不加emoji\n- 不要总结自己刚说过的话\n\n## 输出格式\n牌面解读\n[*牌阵位置1~n*]：[解读]\n\n占卜结果\n[正文]\n\n建议\n[正文]\n\n谶语\n[一句短诗或总结]";
 
   // 构建位置含义文本
-  const positions = spreadPositions[spread] || spreadPositions.single;
   const positionText = cards.map((c, i) => {
     return (i + 1) + "号位 - " + (positions[i] || "第" + (i+1) + "张牌");
   }).join("\n");
 
-  const userPrompt = (questioner ? "## 提问人\n" + questioner + "\n\n" : "") + "## 提问者的问题\n" + question + "\n\n## 牌阵\n" + (spreadNames[spread] || spreadNames.single) + "\n\n## 每张牌的位置含义\n" + positionText + "\n\n## 抽出的塔罗牌\n" + cardsText + "\n\n请严格按照OutputFormat格式输出。";
+  const userPrompt = (questioner ? "## 提问人\n" + questioner + "\n\n" : "") + "## 提问者的问题\n" + question + "\n\n## 牌阵\n" + spreadLabel + "\n\n## 每张牌的位置含义\n" + positionText + "\n\n## 抽出的塔罗牌\n" + cardsText + "\n\n请严格按照OutputFormat格式输出。";
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -245,7 +221,7 @@ app.post("/api/reading", async (req, res) => {
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        temperature: 1.2,
+        temperature: 0.7,
         max_tokens: 2048,
         stream: false,
       }),

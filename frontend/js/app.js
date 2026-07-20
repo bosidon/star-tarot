@@ -66,12 +66,316 @@ const TarotApp = {
   currentSpread: 'single',
 
   // 牌阵配置：牌数 + 位置标签
-  SPREAD_CONFIG: {
-    single:        { count: 1,  label: '单张指引', positions: ['指引'], description: '最简洁的牌阵，适合日常小事或快速获取灵感指引。一张牌直击核心，为你揭示当下最需要关注的能量。' },
-    three:         { count: 3,  label: '三张牌阵', positions: ['过去', '现在', '未来'], description: '经典时间线牌阵，展示事情的发展脉络。过去影响现在，现在塑造未来，帮助你理解事件的来龙去脉。' },
-    horseshoe:     { count: 5,  label: '马蹄牌阵', positions: ['现状', '障碍', '潜意识', '近期', '结果'], description: '综合分析牌阵，适合需要深入理解的复杂问题。涵盖现状、障碍、内心潜意识、近期发展和最终结果五个维度。' },
-    relationship:  { count: 6,  label: '关系牌阵', positions: ['你', '对方', '关系核心', '你的需求', '对方需求', '建议/结果'], description: '专为感情和人际关系设计。分别从你和对方的角度出发，揭示关系的核心动态、彼此需求，以及未来的建议方向。' },
-    celtic:        { count: 10, label: '凯尔特十字', positions: ['现况', '挑战', '根源', '过去', '可能', '近未来', '自我', '环境', '希望', '结局'], description: '最全面深入的经典牌阵，适合重大人生议题。从现状到根源，从过去到未来，全方位剖析问题的各个层面。' },
+  SPREAD_CONFIG: {},
+  SPREAD_ORDER: [],
+
+  async loadSpreads() {
+    try {
+      const r = await fetch('/api/spreads');
+      const d = await r.json();
+      if (d.success) {
+        // Merge custom spreads from localStorage
+        const custom = this.loadCustomSpreads();
+        const allPresets = { ...d.data.presets };
+        const allKeys = Object.keys(allPresets);
+        const allConfigs = { ...allPresets };
+        
+        // Add custom spreads
+        if (custom.length > 0) {
+          custom.forEach(s => {
+            const key = 'custom_' + s.id;
+            allKeys.push(key);
+            allConfigs[key] = s;
+          });
+        }
+        
+        this.SPREAD_CONFIG = allConfigs;
+        this.SPREAD_ORDER = allKeys;
+        // Default to first preset
+        const presetKeys = allKeys.filter(k => !k.startsWith('custom_'));
+        if (presetKeys.length > 0 && !this.currentSpread) {
+          this.currentSpread = presetKeys[0];
+        }
+        this.renderSpreadSelectors();
+      }
+    } catch (e) {
+      console.error('loadSpreads failed:', e);
+    }
+  },
+
+  loadCustomSpreads() {
+    try {
+      return JSON.parse(localStorage.getItem('tarotCustomSpreads') || '[]');
+    } catch(e) { return []; }
+  },
+
+  saveCustomSpreads(spreads) {
+    localStorage.setItem('tarotCustomSpreads', JSON.stringify(spreads));
+  },
+
+  renderSpreadSelectors() {
+    const container = document.querySelector('.spread-selector');
+    if (!container) return;
+    
+    container.innerHTML = '<div style="width:100%;">' + [
+      '<div class="spread-tabs" style="display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid rgba(201,168,76,0.15);">',
+        '<button class="spread-tab tab-preset" data-tab="preset" style="padding:10px 16px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;border:none;background:none;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;color:var(--gold,#c9a84c);border-bottom:2px solid var(--gold,#c9a84c);transition:.2s;">常规牌阵</button>',
+        '<button class="spread-tab tab-custom" data-tab="custom" style="padding:10px 16px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;border:none;background:none;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;color:rgba(201,168,76,0.5);border-bottom:2px solid transparent;transition:.2s;">自定义</button>',
+        '<button class="spread-tab tab-nopos" data-tab="nopos" style="padding:10px 16px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;border:none;background:none;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;color:rgba(201,168,76,0.5);border-bottom:2px solid transparent;transition:.2s;">无位置</button>',
+      '</div>',
+      '<div id="spreadTabContent"></div>'
+    ].join('') + '</div>';
+    
+    this.switchSpreadTab('preset');
+    
+    // Bind tab clicks
+    container.querySelectorAll('.spread-tab').forEach(tab => {
+      tab.addEventListener('click', () => this.switchSpreadTab(tab.dataset.tab));
+    });
+  },
+
+  switchSpreadTab(tabName) {
+    const content = document.getElementById('spreadTabContent');
+    if (!content) return;
+    
+    // Update tab styles
+    document.querySelectorAll('.spread-tab').forEach(t => {
+      const isActive = t.dataset.tab === tabName;
+      t.style.color = isActive ? 'var(--gold,#c9a84c)' : 'rgba(201,168,76,0.5)';
+      t.style.borderBottom = isActive ? '2px solid var(--gold,#c9a84c)' : '2px solid transparent';
+    });
+    
+    if (tabName === 'preset') {
+      this.renderPresetTab(content);
+    } else if (tabName === 'custom') {
+      this.renderCustomTab(content);
+    } else if (tabName === 'nopos') {
+      this.renderNoPosTab(content);
+    }
+  },
+
+  renderPresetTab(content) {
+    // Filter only preset spreads (not custom_)
+    const presetKeys = this.SPREAD_ORDER.filter(k => !k.startsWith('custom_') && k !== 'nopos');
+    const currentIsPreset = presetKeys.includes(this.currentSpread);
+    if (!currentIsPreset && presetKeys.length > 0) {
+      this.currentSpread = presetKeys[0];
+    }
+    
+    let html = '<div style="margin-bottom:12px;">';
+    html += '<select id="spreadSelect" style="padding:10px 14px;background:rgba(26,26,36,0.8);border:1px solid rgba(201,168,76,0.2);border-radius:24px;color:#d4a853;font-size:14px;outline:none;cursor:pointer;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;">';
+    presetKeys.forEach(key => {
+      const cfg = this.SPREAD_CONFIG[key];
+      if (!cfg) return;
+      const sel = key === this.currentSpread ? ' selected' : '';
+      html += '<option value="' + key + '"' + sel + '>' + cfg.label + '</option>';
+    });
+    html += '</select>';
+    html += '</div>';
+    html += '<div id="spreadDetail" style="background:rgba(26,26,36,0.6);border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:14px 16px;margin-bottom:8px;"></div>';
+    content.innerHTML = html;
+    
+    this.updateSpreadDetail();
+    
+    const sel = document.getElementById('spreadSelect');
+    if (sel) {
+      sel.addEventListener('change', (e) => {
+        this.currentSpread = e.target.value;
+        this.updateSpreadDetail();
+        this.resetCards();
+      });
+    }
+  },
+
+  renderCustomTab(content) {
+    const custom = this.loadCustomSpreads();
+    
+    let html = '<div style="margin-bottom:10px;">';
+    html += '<button id="btnNewCustom" style="padding:10px 28px;border:1px solid rgba(201,168,76,0.25);border-radius:24px;background:transparent;color:var(--gold-light,#d4a853);font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;font-size:0.95rem;cursor:pointer;transition:all 0.2s;">✧ 创建自定义牌阵</button>';
+    html += '</div>';
+    
+    if (custom.length === 0) {
+      html += '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px;">还没有自定义牌阵，点击上方按钮创建</div>';
+    } else {
+      custom.forEach((s, idx) => {
+        const isActive = this.currentSpread === 'custom_' + s.id;
+        const activeStyle = isActive ? 'border-color:var(--gold,#c9a84c);background:rgba(201,168,76,0.08);' : '';
+        html += '<div class="custom-spread-item" data-custom-id="' + s.id + '" style="padding:12px 14px;background:rgba(26,26,36,0.6);border:1px solid rgba(201,168,76,0.12);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.2s;' + activeStyle + '">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;">';
+        html += '<div><strong style="color:#e2e8f0;font-size:14px;">' + s.label + '</strong> <span style="color:#64748b;font-size:12px;">' + s.count + '张</span></div>';
+        html += '<button class="del-custom" data-idx="' + idx + '" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:16px;padding:2px 6px;">×</button>';
+        html += '</div>';
+        html += '<div style="margin-top:6px;">' + s.positions.map((p, i) => '<span style="display:inline-block;padding:2px 10px;margin:2px 3px 2px 0;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:12px;font-size:11px;color:#d4a853;">' + (i+1) + '.' + p + '</span>').join('') + '</div>';
+        html += '</div>';
+      });
+    }
+    
+    content.innerHTML = html;
+    
+    // Bind create
+    const btn = document.getElementById('btnNewCustom');
+    if (btn) btn.onclick = () => this.showCustomSpreadEditor();
+    
+    // Bind select
+    content.querySelectorAll('.custom-spread-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = el.dataset.customId;
+        this.currentSpread = 'custom_' + id;
+        this.resetCards();
+        // Update visual
+        content.querySelectorAll('.custom-spread-item').forEach(e => {
+          e.style.borderColor = 'rgba(201,168,76,0.12)';
+          e.style.background = 'rgba(26,26,36,0.6)';
+        });
+        el.style.borderColor = 'var(--gold,#c9a84c)';
+        el.style.background = 'rgba(201,168,76,0.08)';
+      });
+    });
+    
+    // Bind delete
+    content.querySelectorAll('.del-custom').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.idx);
+        const custom = this.loadCustomSpreads();
+        custom.splice(idx, 1);
+        this.saveCustomSpreads(custom);
+        this.loadSpreads();
+      });
+    });
+  },
+
+  renderNoPosTab(content) {
+    let count = 3;
+    // Check if current is nopos
+    if (this.currentSpread === 'nopos') {
+      count = this._noposCount || 3;
+    }
+    
+    content.innerHTML = [
+      '<div style="color:rgba(201,168,76,0.5);font-size:13px;margin-bottom:12px;">不定义牌位置，直接指定抽取的牌数，由 AI 自由解读</div>',
+      '<div style="display:flex;align-items:center;gap:12px;">',
+        '<label style="color:var(--gold-light,#d4a853);font-size:14px;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;">抽取</label>',
+        '<input id="noposCount" type="number" min="1" max="10" value="' + count + '" style="width:70px;padding:10px 12px;background:rgba(26,26,36,0.8);border:1px solid rgba(201,168,76,0.2);border-radius:24px;color:#d4a853;font-size:14px;outline:none;text-align:center;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;">',
+        '<label style="color:var(--gold-light,#d4a853);font-size:14px;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;">张牌</label>',
+      '</div>'
+    ].join('');
+    
+    const input = document.getElementById('noposCount');
+    const apply = () => {
+      const n = parseInt(input.value) || 3;
+      this._noposCount = n;
+      if (!this.SPREAD_CONFIG['nopos']) {
+        this.SPREAD_CONFIG['nopos'] = { count: n, label: '无位置', positions: [], positionDetails: [] };
+      }
+      this.SPREAD_CONFIG['nopos'].count = n;
+      const pos = [];
+      for (let i = 0; i < n; i++) pos.push('第' + (i+1) + '张');
+      this.SPREAD_CONFIG['nopos'].positions = pos;
+      this.SPREAD_CONFIG['nopos'].positionDetails = pos.map((p, i) => (i+1) + '号位');
+      this.currentSpread = 'nopos';
+      this.resetCards();
+    };
+    
+    apply();
+    if (input) input.onchange = apply;
+  },
+
+  resetCards() {
+    this.drawnCards = [];
+    this.selectedCardsCount = 0;
+    document.querySelectorAll('.picker-card').forEach(el => el.classList.remove('selected', 'reversed'));
+    this.updatePickerStatus();
+  },
+
+  updateSpreadDetail() {
+    const cfg = this.SPREAD_CONFIG[this.currentSpread];
+    if (!cfg) return;
+    const el = document.getElementById('spreadDetail');
+    if (!el) return;
+    
+    let posHtml = cfg.positions.map((p, i) => {
+      return '<span style="display:inline-block;padding:4px 12px;margin:3px 4px 3px 0;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:14px;font-size:12px;color:#d4a853;">' + (i+1) + '. ' + p + '</span>';
+    }).join('');
+    
+    el.innerHTML = '<div style="font-size:14px;font-weight:700;color:var(--gold-light,#d4a853);margin-bottom:6px;font-family:&apos;Songti SC&apos;,&apos;Noto Serif SC&apos;,&apos;STSong&apos;,&apos;SimSun&apos;,serif;">' + cfg.label + ' · ' + cfg.count + '张</div>' +
+      '<div style="margin-bottom:6px;">' + posHtml + '</div>' +
+      '<div style="font-size:13px;color:rgba(201,168,76,0.5);line-height:1.6;">' + (cfg.description || '') + '</div>';
+  },
+
+  showCustomSpreadEditor() {
+    // Create modal for custom spread
+    const existing = document.getElementById('customSpreadModal');
+    if (existing) existing.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'customSpreadModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;';
+    
+    modal.innerHTML = [
+      '<div style="background:#14141e;border:1px solid #1e1e2a;border-radius:16px;padding:28px;width:420px;max-width:90vw;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">',
+        '<h3 style="margin:0 0 16px;font-size:18px;">创建自定义牌阵</h3>',
+        '<label style="font-size:13px;color:#94a3b8;display:block;margin-bottom:4px;">牌阵名称</label>',
+        '<input id="csName" style="width:100%;padding:10px 12px;background:#1e293b;border:1px solid #2a2a3a;border-radius:8px;color:#e2e8f0;font-size:14px;outline:none;margin-bottom:12px;box-sizing:border-box;" placeholder="如：工作分析" maxlength="20">',
+        '<label style="font-size:13px;color:#94a3b8;display:block;margin-bottom:4px;">牌数（2~10张）</label>',
+        '<input id="csCount" type="number" min="2" max="10" value="3" style="width:80px;padding:10px 12px;background:#1e293b;border:1px solid #2a2a3a;border-radius:8px;color:#e2e8f0;font-size:14px;outline:none;margin-bottom:12px;box-sizing:border-box;">',
+        '<div id="csPositions" style="margin-bottom:16px;"></div>',
+        '<div style="display:flex;gap:8px;justify-content:flex-end;">',
+          '<button id="csCancel" style="padding:10px 20px;background:transparent;border:1px solid #2a2a3a;border-radius:8px;color:#94a3b8;cursor:pointer;font-size:14px;">取消</button>',
+          '<button id="csSave" style="padding:10px 20px;background:#7c3aed;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;font-weight:600;">保存</button>',
+        '</div>',
+      '</div>'
+    ].join('');
+    
+    document.body.appendChild(modal);
+    
+    const countInput = modal.querySelector('#csCount');
+    const posContainer = modal.querySelector('#csPositions');
+    
+    function renderPosInputs() {
+      const count = parseInt(countInput.value) || 3;
+      let html = '<label style="font-size:13px;color:#94a3b8;display:block;margin-bottom:4px;">各位置名称</label>';
+      for (let i = 0; i < count; i++) {
+        const placeholders = ['现状','障碍','目标','建议','结果','他人','希望','恐惧','环境','核心'];
+        html += '<input class="csPos" style="width:100%;padding:8px 10px;background:#1e293b;border:1px solid #2a2a3a;border-radius:6px;color:#e2e8f0;font-size:13px;outline:none;margin-bottom:6px;box-sizing:border-box;" placeholder="位置' + (i+1) + '（如：' + (placeholders[i]||'') + '）" maxlength="10">';
+      }
+      posContainer.innerHTML = html;
+    }
+    
+    countInput.addEventListener('input', renderPosInputs);
+    renderPosInputs();
+    
+    modal.querySelector('#csCancel').onclick = () => modal.remove();
+    modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+    
+    modal.querySelector('#csSave').onclick = () => {
+      const name = modal.querySelector('#csName').value.trim();
+      const count = parseInt(modal.querySelector('#csCount').value) || 3;
+      const posInputs = modal.querySelectorAll('.csPos');
+      const positions = [];
+      posInputs.forEach(inp => {
+        const v = inp.value.trim();
+        positions.push(v || '位置' + (positions.length + 1));
+      });
+      
+      if (!name) { alert('请输入牌阵名称'); return; }
+      
+      const custom = this.loadCustomSpreads();
+      const id = Date.now().toString(36);
+      custom.push({
+        id: id,
+        count: count,
+        label: name,
+        positions: positions,
+        positionDetails: positions,
+        description: '自定义牌阵：' + name
+      });
+      this.saveCustomSpreads(custom);
+      modal.remove();
+      
+      // Reload spreads
+      this.loadSpreads();
+    };
   },
   cardsData: [],
   allCardsData: [],
@@ -81,21 +385,13 @@ const TarotApp = {
 
 
   updateSpreadDescription() {
-    const descEl = document.getElementById('spreadDescription');
-    if (!descEl) return;
-    const config = this.SPREAD_CONFIG[this.currentSpread];
-    if (config && config.description) {
-      descEl.textContent = config.description;
-      descEl.classList.add('visible');
-    } else {
-      descEl.classList.remove('visible');
-    }
+    // Handled by updateSpreadDetail
   },
 
   init() {
     this.bindEvents();
-    this.updateSpreadDescription();
     this.loadCards();
+    this.loadSpreads();
     // 检测是否从 draw.html 返回
     this.checkDrawSession();
   },
@@ -122,19 +418,7 @@ const TarotApp = {
     document.getElementById('btnInterpret').addEventListener('click', () => this.getInterpretation());
 
 
-    document.querySelectorAll('.spread-option').forEach(el => {
-      el.addEventListener('click', (e) => {
-        document.querySelectorAll('.spread-option').forEach(o => o.classList.remove('active'));
-        e.target.classList.add('active');
-        this.currentSpread = e.target.dataset.spread;
-        this.updateSpreadDescription();
-        // 切换牌阵时重置选牌
-        this.drawnCards = [];
-        this.selectedCardsCount = 0;
-        document.querySelectorAll('.picker-card').forEach(el => el.classList.remove('selected', 'reversed'));
-        this.updatePickerStatus();
-      });
-    });
+// spread-option events now handled in renderSpreadSelectors()
 
         // 点击弹窗外关闭
     document.getElementById('cardPickerModal').addEventListener('click', (e) => {
@@ -1085,6 +1369,9 @@ const TarotApp = {
     // 检测 iframe 导航（❌取消或导航回 index.html）
     iframe.onload = function() {
       try {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+      } catch(e) {}
+      try {
         var url = iframe.contentWindow.location.href;
         if (url.indexOf('index.html') >= 0) {
           if (self._fanStorageHandler) {
@@ -1193,13 +1480,13 @@ document.head.appendChild(s);
       document.getElementById('read').scrollIntoView({ behavior: 'smooth' });
       const spreads = ['single', 'three', 'celtic', 'relationship'];
       const spread = spreads[i] || 'single';
-      const options = document.querySelectorAll('.spread-option');
+      // spread-options now in dropdown
       options.forEach(o => o.classList.remove('active'));
-      const target = document.querySelector('.spread-option[data-spread="' + spread + '"]');
+      // spread now selected via dropdown
       if (target) {
         target.classList.add('active');
         TarotApp.currentSpread = spread;
-        TarotApp.updateSpreadDescription();
+        TarotApp.updateSpreadDetail();
       }
     });
   });

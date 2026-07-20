@@ -1095,7 +1095,6 @@ footer a {
 }
 .fan-modal-page {
   width: 860px;
-  height: 850px;
   background: #0a0016;
   border: 1px solid rgba(212, 168, 83, 0.2);
   border-radius: 16px;
@@ -1132,7 +1131,6 @@ footer a {
   border-color: var(--gold);
 }
 .fan-iframe {
-  flex: 1;
   width: 100%;
   border: none;
   background: #0a0016;
