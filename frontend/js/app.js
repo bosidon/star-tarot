@@ -1407,6 +1407,60 @@ const TarotApp = {
 
 document.addEventListener('DOMContentLoaded', () => TarotApp.init());
 
+// 微信通知：保存数据 → 跳订阅授权
+TarotApp.wechatNotify = function() {
+  var self = this;
+  XianbaoAuth.checkAuth().then(function() {
+    if (!XianbaoAuth.isLoggedIn()) {
+      self.showToast('请先登录后使用');
+      if (XianbaoAuth.showLogin) XianbaoAuth.showLogin();
+      return;
+    }
+    var q = (document.getElementById('questionInput').value || '塔罗指引').trim().slice(0, 20);
+    var content = (document.getElementById('interpretationContent').innerText || '').replace(/\s+/g, ' ').trim();
+    var ans = content.slice(0, 20) || '答案已生成';
+    localStorage.setItem('tarot_notify', JSON.stringify({ q: q, ans: ans }));
+    var ret = location.href.split('?')[0] + '?sub=tarot';
+    location.href = 'https://auth.xianbao.online/wechat/subscribe-authorize?template_id=4cEe8rzU3mJvxoNAqzTGRQ59wK1RLDcOb5sqQlgarRM&returnUrl=' + encodeURIComponent(ret) + '&scene=tarot';
+  });
+};
+
+// 订阅通知返回处理：授权后自动发送
+(function checkSubscribeReturn() {
+  if (location.search.indexOf('sub=tarot') > -1) {
+    var raw = localStorage.getItem('tarot_notify');
+    localStorage.removeItem('tarot_notify');
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      var now = new Date();
+      var pad = function(n) { return n < 10 ? '0' + n : n; };
+      var time4 = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+      fetch('https://auth.xianbao.online/api/auth/wechat/subscribe/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          template_id: '4cEe8rzU3mJvxoNAqzTGRQ59wK1RLDcOb5sqQlgarRM',
+          data: {
+            thing1: d.q,
+            time4: time4,
+            name3: '仙宝心灵成长',
+            thing2: d.ans
+          }
+        })
+      }).then(function(r) { return r.json(); }).then(function(j) {
+        if (j.success) {
+          TarotApp.showToast('✅ 塔罗解读已发送到微信');
+        } else {
+          TarotApp.showToast(j.error || '发送失败');
+        }
+      }).catch(function() {});
+    } catch (e) {}
+  }
+})();
+
+
 // 注入shake动画
 const s = document.createElement('style');
 s.textContent = `
