@@ -900,11 +900,15 @@ const TarotApp = {
   },
   downloadPdf() {
     const content = document.getElementById('interpretationContent');
-    if (!content || !content.innerText.trim()) { this.showToast && this.showToast('暂无解读内容'); return; }
-    if (typeof XD === 'undefined') { alert('加载组件失败，请刷新重试'); return; }
+    const html = this._buildPrintHtml(content.innerHTML);
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
     const now = new Date();
     const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-    XD.imagePDF(content, { name: '星语塔罗_解读_' + ts, hide: ['#interpretationActions', '#btnNewQuestion'] });
+    win.document.title = `星语塔罗_${ts}`;
+    win.print();
   },
 
   _buildPrintHtml(innerHtml) {
@@ -914,7 +918,11 @@ const TarotApp = {
 
     let cardsList = '';
     cards.forEach((c, i) => {
-      cardsList += `<li><strong>${c.name}</strong>（${c.arcana}·${c.reversed ? '逆位' : '正位'}）</li>`;
+      let imgSrc = '';
+      try { imgSrc = getCardImagePath(c); } catch(e) {}
+      cardsList += `<li style="margin-bottom:10px">` +
+        (imgSrc ? `<img src="${imgSrc}" style="width:60px;height:96px;border-radius:4px;vertical-align:middle;margin-right:10px" alt="${c.name}">` : '') +
+        `<strong>${c.name}</strong>（${c.arcana}·${c.reversed ? '逆位' : '正位'}）</li>`;
     });
 
     return `<!DOCTYPE html>
