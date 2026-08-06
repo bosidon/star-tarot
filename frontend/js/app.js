@@ -820,29 +820,7 @@ const TarotApp = {
   },
 
   showInterpretation(text) {
-    this.showHtml(this.buildCardsHtml() + this.mdToHtml(text));
-  },
-
-  // 牌面图片区（解读内容头部）
-  buildCardsHtml() {
-    if (!this.drawnCards || !this.drawnCards.length) return '';
-    const config = this.SPREAD_CONFIG[this.currentSpread] || this.SPREAD_CONFIG.single;
-    const positions = config.positions || [];
-    let h = '<div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:16px 0;padding:16px 12px;background:rgba(255,255,255,.03);border-radius:12px">';
-    this.drawnCards.forEach((card, i) => {
-      const pos = positions[i] || '第' + (i + 1) + '张';
-      const status = card.reversed ? '逆位' : '正位';
-      let imgSrc = '';
-      try { imgSrc = getCardImagePath(card); } catch(e) {}
-      h += '<div style="text-align:center;width:92px">' +
-        '<div style="font-size:0.8rem;color:#d4a853;margin-bottom:6px;font-weight:600">' + pos + '</div>' +
-        (imgSrc ? '<img src="' + imgSrc + '" style="width:82px;height:130px;border-radius:6px;object-fit:cover;display:block;margin:0 auto" alt="' + this._esc(card.name || '') + '">' : '<div style="width:82px;height:130px;border-radius:6px;background:rgba(212,168,83,.15);display:flex;align-items:center;justify-content:center;color:#d4a853;font-size:0.75rem;margin:0 auto">' + this._esc(card.name || '') + '</div>') +
-        '<div style="font-size:0.8rem;color:#e8e6f0;margin-top:6px">' + this._esc(card.name || '') + '</div>' +
-        '<div style="font-size:0.72rem;color:' + (card.reversed ? '#e07b7b' : '#7bd389') + '">' + status + '</div>' +
-        '</div>';
-    });
-    h += '</div>';
-    return h;
+    this.showHtml(this.mdToHtml(text));
   },
 
   // 直接渲染 HTML 内容到解读区（不经过 Markdown 转换）
@@ -946,11 +924,7 @@ const TarotApp = {
 
     let cardsList = '';
     cards.forEach((c, i) => {
-      let imgSrc = '';
-      try { imgSrc = getCardImagePath(c); } catch(e) {}
-      cardsList += `<li style="margin-bottom:10px">` +
-        (imgSrc ? `<img src="${imgSrc}" style="width:60px;height:96px;border-radius:4px;vertical-align:middle;margin-right:10px" alt="${c.name}">` : '') +
-        `<strong>${c.name}</strong>（${c.arcana}·${c.reversed ? '逆位' : '正位'}）</li>`;
+      cardsList += `<li><strong>${c.name}</strong>（${c.arcana}·${c.reversed ? '逆位' : '正位'}）</li>`;
     });
 
     return `<!DOCTYPE html>
