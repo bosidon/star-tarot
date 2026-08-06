@@ -868,6 +868,14 @@ const TarotApp = {
   },
 
 
+  generateImage() {
+    var content = document.getElementById('interpretationContent');
+    if (!content || !content.innerText.trim()) { this.showMessage && this.showMessage('暂无解读内容'); return; }
+    if (typeof XD === 'undefined') { alert('加载组件失败，请刷新重试'); return; }
+    var now = new Date();
+    var ts = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '_' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
+    XD.image(content, { name: '星语塔罗_解读_' + ts });
+  },
   downloadPdf() {
     const content = document.getElementById('interpretationContent');
     const html = this._buildPrintHtml(content.innerHTML);
