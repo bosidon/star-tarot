@@ -897,7 +897,7 @@ const TarotApp = {
         '</div>' +
         '<div style="padding:12px 0;color:#2b2b2b">' + content.innerHTML + '</div>' +
         '<hr style="border:none;border-top:1px solid #ddd;margin:20px 0">' +
-        '<div style="text-align:center;color:#999;font-size:0.8rem">解读内容仅供参考 · 星语塔罗</div>' +
+        '<div style="text-align:center;color:#999;font-size:0.8rem">解读内容仅供参考 · ' + (window.XB_SELF || 'https://tarot.xianbao.online') + '</div>' +
       '</div>';
     document.body.appendChild(wrapper);
     XD.image(wrapper.firstChild, { name: '星语塔罗_解读_' + ts }).finally(function() {
