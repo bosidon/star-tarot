@@ -785,7 +785,7 @@ const TarotApp = {
             '<p style="margin:0 0 20px;color:#888;font-size:14px;line-height:1.8;">' +
             '你的免费塔罗解读次数已用完。升级VIP后可无限使用<br>' +
             '塔罗解读 · 玛雅天赋 · 灵修阅读 · 心理测评等全部功能。</p>' +
-            '<a href="https://xianbao.online/vip.html" target="_blank" ' +
+            '<a href="' + (window.XB_MAIN || 'https://xianbao.online') + '/vip.html" target="_blank" ' +
             'style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#a78bfa,#f472b6);' +
             'color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">' +
             '✨ 了解VIP会员</a></div>'
@@ -910,7 +910,7 @@ const TarotApp = {
 <p><strong>牌阵：</strong>${spreadName}</p></div>
 <div class="cards-list"><strong>抽到的牌：</strong><ol>${cardsList}</ol></div>
 <hr><div class="interpretation">${innerHtml}</div>
-<hr><div class="footer"><p>解读内容仅供参考 · https://tarot.xianbao.online</p></div>
+<hr><div class="footer"><p>解读内容仅供参考 · ${window.XB_SELF || 'https://tarot.xianbao.online'}</p></div>
 </body></html>`;
   },
 
