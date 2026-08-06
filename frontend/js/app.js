@@ -778,23 +778,30 @@ const TarotApp = {
 
       if (!data.success) {
         if (data.error === 'free_tarot_limit') {
-          this.showHtml(
-            '<div style="text-align:center;padding:40px 20px;">' +
-            '<div style="font-size:48px;margin-bottom:16px;">🔮</div>' +
-            '<h3 style="margin:0 0 12px;color:#a78bfa;">免费次数已用完</h3>' +
-            '<p style="margin:0 0 20px;color:#888;font-size:14px;line-height:1.8;">' +
-            '你的免费塔罗解读次数已用完。升级VIP后可无限使用<br>' +
-            '塔罗解读 · 玛雅天赋 · 灵修阅读 · 心理测评等全部功能。</p>' +
-            '<a href="' + (window.XB_MAIN || 'https://xianbao.online') + '/vip.html" target="_blank" ' +
-            'style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#a78bfa,#f472b6);' +
-            'color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">' +
-            '✨ 了解VIP会员</a></div>'
-          );
+          if (typeof XianbaoAuth !== 'undefined' && XianbaoAuth.showLimitCard) {
+            const content = document.getElementById('interpretationContent');
+            if (content) content.innerHTML = XianbaoAuth.showLimitCard('tarot');
+          } else {
+            this.showHtml(
+              '<div style="text-align:center;padding:40px 20px;">' +
+              '<div style="font-size:48px;margin-bottom:16px;">🔮</div>' +
+              '<h3 style="margin:0 0 12px;color:#a78bfa;">免费次数已用完</h3>' +
+              '<p style="margin:0 0 20px;color:#888;font-size:14px;line-height:1.8;">' +
+              '你的免费塔罗解读次数已用完。升级VIP后可无限使用<br>' +
+              '塔罗解读 · 玛雅天赋 · 灵修阅读 · 心理测评等全部功能。</p>' +
+              '<a href="' + (window.XB_MAIN || 'https://xianbao.online') + '/vip.html" target="_blank" ' +
+              'style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#a78bfa,#f472b6);' +
+              'color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">' +
+              '✨ 了解VIP会员</a></div>'
+            );
+          }
         } else {
-          const msg = data.error === 'need_login'
-            ? '请先登录后使用塔罗解读'
-            : (data.error || '解读生成失败，请稍后重试');
-          this.showToast(msg);
+          if (data.error === 'need_login' && typeof XianbaoAuth !== 'undefined') {
+            XianbaoAuth.showLogin();
+            this.showToast('请先登录后使用塔罗解读');
+          } else {
+            this.showToast(data.error || '解读生成失败，请稍后重试');
+          }
         }
         this._interpreting = false;
         btn.classList.remove('loading');
